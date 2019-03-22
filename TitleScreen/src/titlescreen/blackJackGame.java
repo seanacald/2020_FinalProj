@@ -45,6 +45,9 @@ public class blackJackGame {
     static int score = 0;
     static int cardsUsed = 0;
     
+    static int WIDTH = 800;
+    static int HEIGHT = 600;
+    
     public static int display(MenuBar menuBar){
         Stage window = new Stage();
         Pane rootBJ = new Pane();
@@ -95,19 +98,19 @@ public class blackJackGame {
             }
         });
         
-        btnPlay.setLayoutX(400);
-        btnPlay.setLayoutY(150);
+        btnPlay.setLayoutX(WIDTH/2);
+        btnPlay.setLayoutY(HEIGHT-450);
         
-        btnRules.setLayoutX(400);
-        btnRules.setLayoutY(300);
+        btnRules.setLayoutX(WIDTH/2);
+        btnRules.setLayoutY(HEIGHT/2);
         
-        btnQuit.setLayoutX(400);
-        btnQuit.setLayoutY(450);
+        btnQuit.setLayoutX(WIDTH/2);
+        btnQuit.setLayoutY(HEIGHT-150);
         
         
         rootBJ.getChildren().addAll(menuBar, btnPlay, btnRules, btnQuit);
-        
-        Scene scene = new Scene(rootBJ, 800, 600);
+        //800,600
+        Scene scene = new Scene(rootBJ, WIDTH, HEIGHT);
         window.setScene(scene);
         window.showAndWait();
         return closeEverything;
@@ -187,22 +190,26 @@ public class blackJackGame {
             Button btnHit = new Button("Hit me");
             Button btnFreeze = new Button("Freeze");
             
+            //Setting coordinates for each node
             lblMon.setLayoutX(10);
             lblMon.setLayoutY(30);
             lblCurrentBet.setLayoutX(10);
             lblCurrentBet.setLayoutY(50);
             lblBetP.setLayoutX(10);
-            lblBetP.setLayoutY(550);
+            lblBetP.setLayoutY(HEIGHT-50);
             txtBet.setLayoutX(100);
-            txtBet.setLayoutY(550);
+            txtBet.setLayoutY(HEIGHT-50);
             btnSubmit.setLayoutX(300);
-            btnSubmit.setLayoutY(550);
+            btnSubmit.setLayoutY(HEIGHT-50);
             btnHit.setLayoutX(550);
-            btnHit.setLayoutY(550);
+            btnHit.setLayoutY(HEIGHT-50);
             btnFreeze.setLayoutX(700);
-            btnFreeze.setLayoutY(550);
+            btnFreeze.setLayoutY(HEIGHT-50);
+            
+            //Setting default visibility for Buttons (Hit/Freeze)
             btnHit.setVisible(false);
             btnFreeze.setVisible(false);
+            
             thePane.getChildren().addAll(lblMon,lblCurrentBet,lblBetP,txtBet,btnSubmit, btnHit, btnFreeze);
             
             btnSubmit.setOnAction(e->{
