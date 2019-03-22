@@ -16,6 +16,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -28,41 +30,115 @@ import javafx.collections.*;
 import javafx.geometry.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class blackJackGame {
     static int closeEverything;
+    static String userName;
+    static double money = 100;
+    static boolean readyToPlay = false;
+    static double currentBet = 0;
+    static int[] cards = new int[52];
+    static int[] cardValue = {2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,1,1,1,1};
+    static Random randomGen = new Random();
+    static int score = 0;
+    static int enemyScore = 0;
+    static int cardsUsed = 0;
+
+    static int WIDTH = 800;
+    static int HEIGHT = 600;
+    static ArrayList<Image> deck = new ArrayList<>();
+    //static ArrayList<ImageView> view = new ArrayList<>();
+    static ImageView[] view = new ImageView[24];        //You can get a maximum of 12 cards each per side.
+    static int howManyCards = 0;
+    static int howManyEnemyCards = 12;
+    
     public static int display(MenuBar menuBar){
         Stage window = new Stage();
         Pane rootBJ = new Pane();
-        
+
+
         window.setTitle("Black Jack");
         menuBar.prefWidthProperty().bind(window.widthProperty());
         Button btnPlay = new Button("Play");
         Button btnRules = new Button("Rules");
         Button btnQuit = new Button("Quit");
-        
+
         btnPlay.setOnAction(e -> {
             btnPlay.setVisible(false);
             btnRules.setVisible(false);
             btnQuit.setVisible(false);
-            playGame(rootBJ);
+            String photoLocation = new File("src/titlescreen/cards").getAbsolutePath();
+            for (int i = 0; i<52; i++){
+                int j= i+1;
+                deck.add(new Image (new File(photoLocation).toURI().toString()+"/" + j +".jpg"));
+                if (i<24){
+                    view[i] = new ImageView();
+                    view[i].setFitHeight(120);
+                    view[i].setFitWidth(95);
+                    if(i<12){
+                        view[i].setLayoutX(i*7);
+                        view[i].setLayoutY(HEIGHT-120);
+                    }
+                    else{
+                        view[i].setLayoutX(WIDTH-95-(15*(i-12)));
+                        view[i].setLayoutY(30);
+                    }
+                    //view[i].setImage(deck.get(i));
+                    rootBJ.getChildren().add(view[i]);
+                }
+            }
+            /*
+            view[12].setImage(deck.get(50));
+            view[13].setImage(deck.get(49));
+            view[11].setImage(deck.get(30));
+            rootBJ.getChildren().addAll(view[11], view[12],view[13]);
+            */
+            //ImageView view0 = new ImageView(deck.get(51));
+            //stack
+            /*view[0].setImage(deck.get(51));
+            view[1].setImage(deck.get(50));
+            view[0].setImage(deck.get(35));
+            view[0].setVisible(false);
+            view[1].setLayoutX(15);
+            rootBJ.getChildren().addAll(view[0],view[1]);
+            i*15=position
             
+            */
+            getUserInfo(rootBJ);
+
+
         });
-        
-        
+
+
         btnRules.setOnAction(e ->{
             blackJackRules.display();
         });
-       
+
         btnQuit.setOnAction(e -> {
             closeEverything = exitWindow.callExit();
-            if (closeEverything != 2){ 
-                window.close(); 
+            if (closeEverything != 2){
+                window.close();
             }
-           
+
         });
-        
+
+        checkIfForceClose(rootBJ, window);
+
+
+
+
+
+
+
+
         window.setOnCloseRequest(e -> {
             e.consume();
             closeEverything = exitWindow.callExit();
@@ -70,51 +146,283 @@ public class blackJackGame {
                 window.close();
             }
         });
-        
-        btnPlay.setLayoutX(400);
-        btnPlay.setLayoutY(150);
-        
-        btnRules.setLayoutX(400);
-        btnRules.setLayoutY(300);
-        
-        btnQuit.setLayoutX(400);
-        btnQuit.setLayoutY(450);
-        
-        
+
+        btnPlay.setLayoutX(WIDTH/2);
+        btnPlay.setLayoutY(HEIGHT-450);
+
+        btnRules.setLayoutX(WIDTH/2);
+        btnRules.setLayoutY(HEIGHT/2);
+
+        btnQuit.setLayoutX(WIDTH/2);
+        btnQuit.setLayoutY(HEIGHT-150);
+
+
         rootBJ.getChildren().addAll(menuBar, btnPlay, btnRules, btnQuit);
-        
-        Scene scene = new Scene(rootBJ, 800, 600);
+        //800,600
+        Scene scene = new Scene(rootBJ, WIDTH, HEIGHT);
         window.setScene(scene);
         window.showAndWait();
         return closeEverything;
     }
-    
-    
-    public static void playGame(Pane thePane){
+
+
+    public static void getUserInfo(Pane thePane){
+        //checkIfForceClose(thePane, theStage);
         Label lblWelcome = new Label("Welcome Player! Are you a new player? Or are you a returning player?");
         lblWelcome.setLayoutX(250);
         lblWelcome.setLayoutY(200);
-        
+
         Button newUser = new Button("New User");
         Button returningUser = new Button("Returning User");
-        
+
         newUser.setPrefSize(120, 70);
         returningUser.setPrefSize(120, 70);
-        
+
         newUser.setLayoutX(250);
         newUser.setLayoutY(400);
         returningUser.setLayoutX(450);
         returningUser.setLayoutY(400);
         thePane.getChildren().addAll(lblWelcome, newUser, returningUser);
-        final String userName = "";
-        double money = 100;
+
+
         newUser.setOnAction(e -> {
+            lblWelcome.setVisible(false);
             newUser.setVisible(false);
             returningUser.setVisible(false);
             TextField txtUserName = new TextField();
             Label lblEnterName = new Label("Enter Username");
-            thePane.getChildren().addAll(txtUserName, lblEnterName);
+            Button submitUserName = new Button("Submit");
+
+            lblEnterName.setLayoutX(200);
+            lblEnterName.setLayoutY(300);
+            txtUserName.setLayoutX(300);
+            txtUserName.setLayoutY(300);
+            submitUserName.setLayoutX(500);
+            submitUserName.setLayoutY(300);
+
+
+            thePane.getChildren().addAll(txtUserName, lblEnterName, submitUserName);
+            submitUserName.setOnAction(f -> {
+                userName = txtUserName.getText();
+                submitUserName.setVisible(false);
+                txtUserName.setVisible(false);
+                lblEnterName.setVisible(false);
+                playGame(thePane);
+            });
+
+
+
         });
     }
+
+    public static void checkIfForceClose(Pane thePane, Stage theStage){
+          thePane.setOnKeyPressed((KeyEvent ke) -> {
+            if (ke.getCode().equals(KeyCode.ESCAPE)){
+                closeEverything = 0;
+                theStage.close();
+            }
+        });
+
+    }
+
+
+    public static void playGame(Pane thePane){
+                    //playGame();
+            String whereIsMP3 = new File("src/titlescreen/Casino.wav").getAbsolutePath();
+            Media media = new Media(new File(whereIsMP3).toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setAutoPlay(true);
+            MediaView mediaViewer = new MediaView(mediaPlayer);
+            thePane.getChildren().add(mediaViewer);
+
+            Label lblBetP = new Label("Enter bet: ");
+            Label lblMon = new Label();
+            Label lblCurrentBet = new Label();
+            TextField txtBet = new TextField();
+            lblMon.setText("Current Money: " + Double.toString(money));
+            Button btnSubmit = new Button("Submit Bet");
+            Button btnHit = new Button("Hit me");
+            Button btnFreeze = new Button("Freeze");
+
+            //Setting coordinates for each node
+            lblMon.setLayoutX(10);
+            lblMon.setLayoutY(30);
+            lblCurrentBet.setLayoutX(10);
+            lblCurrentBet.setLayoutY(50);
+            lblBetP.setLayoutX(10);
+            lblBetP.setLayoutY(HEIGHT-50);
+            txtBet.setLayoutX(100);
+            txtBet.setLayoutY(HEIGHT-50);
+            btnSubmit.setLayoutX(300);
+            btnSubmit.setLayoutY(HEIGHT-50);
+            btnHit.setLayoutX(550);
+            btnHit.setLayoutY(HEIGHT-50);
+            btnFreeze.setLayoutX(700);
+            btnFreeze.setLayoutY(HEIGHT-50);
+
+            //Setting default visibility for Buttons (Hit/Freeze)
+            btnHit.setVisible(false);
+            btnFreeze.setVisible(false);
+
+            thePane.getChildren().addAll(lblMon,lblCurrentBet,lblBetP,txtBet,btnSubmit, btnHit, btnFreeze);
+
+            btnSubmit.setOnAction(e->{
+                howManyCards = 0;
+                howManyEnemyCards = 12;
+                currentBet = Double.parseDouble(txtBet.getText());
+                if(currentBet <=0){
+                    txtBet.setText("Bet must be over 0$.");
+                }
+                else if (money - currentBet < 0){
+                    txtBet.setText("Not enough funds.");
+                }
+                else{
+                    score = 0;
+                    enemyScore = 0;
+                    btnSubmit.setVisible(false);
+                    lblBetP.setVisible(false);
+                    txtBet.setVisible(false);
+                    btnHit.setVisible(true);
+                    btnFreeze.setVisible(true);
+                    money = money - currentBet;
+                    lblMon.setText("Current Money: "+ Double.toString(money));
+                    lblCurrentBet.setText("Current Bet: " + Double.toString(currentBet));
+                }
+            });
+
+
+            btnHit.setOnAction(e -> {
+                
+               int chosenCard;
+               while(true){
+                  chosenCard = getRandomNumber();
+                  if (cards[chosenCard] == 0){
+                      cards[chosenCard] = 1;
+                      cardsUsed+=1;
+                      if(cardsUsed==52){
+                          for(int j =0; j<52; j++){
+                              cards[j] = 0;
+                          }
+                          cardsUsed =0;
+                      }
+                      break;
+                  }
+               }
+               score += cardValue[chosenCard];
+               view[howManyCards].setImage(deck.get(chosenCard));
+               howManyCards+=1;
+               if(score >21){
+                   System.out.println("You bust! Please Freeze.");
+                    btnHit.setVisible(false);
+                    
+               }
+               //Enemy must play on anything under 16.
+               if (enemyScore < 16){
+                 while(true){
+                   chosenCard = getRandomNumber();
+                   if (cards[chosenCard] == 0){
+                     cards[chosenCard] = 1;
+                     cardsUsed+=1;
+                     if(cardsUsed==52){
+                       for(int j =0; j<52; j++){
+                         cards[j] = 0;
+                       }
+                       cardsUsed =0;
+                     }
+                     
+                     break;
+                   }
+                 }
+                 System.out.println("Enemy got: " + cardValue[chosenCard]);
+                 enemyScore += cardValue[chosenCard];
+                 view[howManyEnemyCards].setImage(deck.get(chosenCard));
+                 howManyEnemyCards+=1;
+               }
+                
+               System.out.println(score);
+               howManyCards+=1;
+             });
+
+            btnFreeze.setOnAction(e -> {
+                System.out.println("Froze on score: " + score);
+                btnHit.setVisible(false);
+                btnFreeze.setVisible(false);
+                btnSubmit.setVisible(true);
+                lblBetP.setVisible(true);
+                txtBet.setVisible(true);
+                int chosenCard;
+                if (enemyScore < 16){
+                 while(true){
+                   chosenCard = getRandomNumber();
+                   if (cards[chosenCard] == 0){
+                     cards[chosenCard] = 1;
+                     cardsUsed+=1;
+                     if(cardsUsed==52){
+                       for(int j =0; j<52; j++){
+                         cards[j] = 0;
+                       }
+                       cardsUsed =0;
+                     }
+                     System.out.println("Enemy got: " + cardValue[chosenCard]);
+                     enemyScore += cardValue[chosenCard];
+                     if(enemyScore >16){
+                        break;
+                     }
+                   }
+                 }
+                 
+               }
+                
+                System.out.println("Your score was: " + score);
+                System.out.println("Enemy score was: " + enemyScore);
+                
+                if(score >21 ){
+                    if(enemyScore >21){
+                        System.out.println("Tie.");
+                        //Tie.
+                        money+=currentBet;
+                    }
+                    else{
+                        //You lose.
+                        System.out.println("You lose.");
+                    }
+                }
+                
+                else if (enemyScore > 21){
+                    System.out.println("You win!");
+                    money +=currentBet*2;
+                }
+                
+                else if(score > enemyScore){
+                    //You win a profit!
+                    System.out.println("You win!");
+                    money += currentBet*2; 
+                }
+                else if (score == enemyScore){
+                    System.out.println("Tie.");
+                    //Get your money back
+                    money += currentBet;
+                }
+                else{
+                    System.out.println("You lose.");
+                }
+                lblMon.setText("Current Money: "+ Double.toString(money));
+                resetCards();
+            });
+
+    }
+
+    public static int getRandomNumber(){
+        //Get number between 0 and 51
+        int randomNum = randomGen.nextInt(52);
+        return randomNum;
+    }
     
+    public static void resetCards(){
+        for(int i =0; i<24; i++){
+            view[i].setImage(null);
+        }
+    }
+
+
 }
