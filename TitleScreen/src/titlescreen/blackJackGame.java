@@ -28,13 +28,17 @@ import javafx.collections.*;
 import javafx.geometry.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 
 public class blackJackGame {
     static int closeEverything;
+    static String userName;
     public static int display(MenuBar menuBar){
         Stage window = new Stage();
         Pane rootBJ = new Pane();
+        
         
         window.setTitle("Black Jack");
         menuBar.prefWidthProperty().bind(window.widthProperty());
@@ -63,6 +67,14 @@ public class blackJackGame {
            
         });
         
+        rootBJ.setOnKeyPressed(new EventHandler<KeyEvent>(){                      //Check if a key was pressed
+            public void handle(KeyEvent ke) {
+                if (ke.getCode().equals(KeyCode.ESCAPE)){
+                    closeEverything = 0;
+                    window.close();
+                }
+            }
+        });
         window.setOnCloseRequest(e -> {
             e.consume();
             closeEverything = exitWindow.callExit();
@@ -106,14 +118,32 @@ public class blackJackGame {
         returningUser.setLayoutX(450);
         returningUser.setLayoutY(400);
         thePane.getChildren().addAll(lblWelcome, newUser, returningUser);
-        final String userName = "";
+        
         double money = 100;
         newUser.setOnAction(e -> {
+            lblWelcome.setVisible(false);
             newUser.setVisible(false);
             returningUser.setVisible(false);
             TextField txtUserName = new TextField();
             Label lblEnterName = new Label("Enter Username");
-            thePane.getChildren().addAll(txtUserName, lblEnterName);
+            Button submitUserName = new Button("Submit");
+            
+            lblEnterName.setLayoutX(200);
+            lblEnterName.setLayoutY(300);
+            txtUserName.setLayoutX(250);
+            txtUserName.setLayoutY(300);
+            submitUserName.setLayoutX(500);
+            submitUserName.setLayoutY(300);
+            
+            
+            thePane.getChildren().addAll(txtUserName, lblEnterName, submitUserName);
+            submitUserName.setOnAction(f -> {
+                userName = txtUserName.getText();
+                submitUserName.setVisible(false);
+                txtUserName.setVisible(false);
+                lblEnterName.setVisible(false);
+            });
+            
         });
     }
     
