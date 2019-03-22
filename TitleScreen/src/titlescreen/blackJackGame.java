@@ -35,13 +35,37 @@ public class blackJackGame {
         Stage window = new Stage();
         
         window.setTitle("Black Jack");
-        //window.setFullScreen(true);
-        //window.setMinWidth(250);
         menuBar.prefWidthProperty().bind(window.widthProperty());
-        Button clse = new Button("Close the window");
-        clse.setOnAction(e -> window.close());
+        Button btnPlay = new Button("Play");
+        Button btnRules = new Button("Rules");
+        Button btnQuit = new Button("Quit");
+        
+        btnPlay.setOnAction(e -> {
+            btnPlay.setVisible(false);
+            btnRules.setVisible(false);
+            btnQuit.setVisible(false);
+        });
+        
+        
+        btnRules.setOnAction(e ->{
+            blackJackRules.display();
+        });
+       
+        btnQuit.setOnAction(e -> {
+           window.close(); 
+        });
+        
+        btnPlay.setLayoutX(400);
+        btnPlay.setLayoutY(150);
+        
+        btnRules.setLayoutX(400);
+        btnRules.setLayoutY(300);
+        
+        btnQuit.setLayoutX(400);
+        btnQuit.setLayoutY(450);
+        
         Pane rootBJ = new Pane();
-        rootBJ.getChildren().addAll(menuBar);
+        rootBJ.getChildren().addAll(menuBar, btnPlay, btnRules, btnQuit);
         
         Scene scene = new Scene(rootBJ, 800, 600);
         window.setScene(scene);
