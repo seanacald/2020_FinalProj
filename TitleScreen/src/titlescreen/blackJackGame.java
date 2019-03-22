@@ -16,6 +16,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +32,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class blackJackGame {
     static int closeEverything;
@@ -48,7 +54,12 @@ public class blackJackGame {
 
     static int WIDTH = 800;
     static int HEIGHT = 600;
-
+    static ArrayList<Image> deck = new ArrayList<>();
+    //static ArrayList<ImageView> view = new ArrayList<>();
+    static ImageView[] view = new ImageView[24];        //You can get a maximum of 12 cards each per side.
+    static int howManyCards = 0;
+    static int howManyEnemyCards = 12;
+    
     public static int display(MenuBar menuBar){
         Stage window = new Stage();
         Pane rootBJ = new Pane();
@@ -64,6 +75,43 @@ public class blackJackGame {
             btnPlay.setVisible(false);
             btnRules.setVisible(false);
             btnQuit.setVisible(false);
+            String photoLocation = new File("src/titlescreen/cards").getAbsolutePath();
+            for (int i = 0; i<52; i++){
+                int j= i+1;
+                deck.add(new Image (new File(photoLocation).toURI().toString()+"/" + j +".jpg"));
+                if (i<24){
+                    view[i] = new ImageView();
+                    view[i].setFitHeight(120);
+                    view[i].setFitWidth(95);
+                    if(i<12){
+                        view[i].setLayoutX(i*7);
+                        view[i].setLayoutY(HEIGHT-120);
+                    }
+                    else{
+                        view[i].setLayoutX(WIDTH-95-(15*(i-12)));
+                        view[i].setLayoutY(30);
+                    }
+                    //view[i].setImage(deck.get(i));
+                    rootBJ.getChildren().add(view[i]);
+                }
+            }
+            /*
+            view[12].setImage(deck.get(50));
+            view[13].setImage(deck.get(49));
+            view[11].setImage(deck.get(30));
+            rootBJ.getChildren().addAll(view[11], view[12],view[13]);
+            */
+            //ImageView view0 = new ImageView(deck.get(51));
+            //stack
+            /*view[0].setImage(deck.get(51));
+            view[1].setImage(deck.get(50));
+            view[0].setImage(deck.get(35));
+            view[0].setVisible(false);
+            view[1].setLayoutX(15);
+            rootBJ.getChildren().addAll(view[0],view[1]);
+            i*15=position
+            
+            */
             getUserInfo(rootBJ);
 
 
@@ -180,7 +228,12 @@ public class blackJackGame {
 
     public static void playGame(Pane thePane){
                     //playGame();
-
+            String whereIsMP3 = new File("src/titlescreen/Casino.wav").getAbsolutePath();
+            Media media = new Media(new File(whereIsMP3).toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setAutoPlay(true);
+            MediaView mediaViewer = new MediaView(mediaPlayer);
+            thePane.getChildren().add(mediaViewer);
 
             Label lblBetP = new Label("Enter bet: ");
             Label lblMon = new Label();
@@ -214,7 +267,8 @@ public class blackJackGame {
             thePane.getChildren().addAll(lblMon,lblCurrentBet,lblBetP,txtBet,btnSubmit, btnHit, btnFreeze);
 
             btnSubmit.setOnAction(e->{
-
+                howManyCards = 0;
+                howManyEnemyCards = 12;
                 currentBet = Double.parseDouble(txtBet.getText());
                 if(currentBet <=0){
                     txtBet.setText("Bet must be over 0$.");
@@ -255,6 +309,8 @@ public class blackJackGame {
                   }
                }
                score += cardValue[chosenCard];
+               view[howManyCards].setImage(deck.get(chosenCard));
+               howManyCards+=1;
                if(score >21){
                    System.out.println("You bust! Please Freeze.");
                     btnHit.setVisible(false);
@@ -279,9 +335,12 @@ public class blackJackGame {
                  }
                  System.out.println("Enemy got: " + cardValue[chosenCard]);
                  enemyScore += cardValue[chosenCard];
+                 view[howManyEnemyCards].setImage(deck.get(chosenCard));
+                 howManyEnemyCards+=1;
                }
                 
                System.out.println(score);
+               howManyCards+=1;
              });
 
             btnFreeze.setOnAction(e -> {
@@ -348,7 +407,7 @@ public class blackJackGame {
                     System.out.println("You lose.");
                 }
                 lblMon.setText("Current Money: "+ Double.toString(money));
-
+                resetCards();
             });
 
     }
@@ -357,6 +416,12 @@ public class blackJackGame {
         //Get number between 0 and 51
         int randomNum = randomGen.nextInt(52);
         return randomNum;
+    }
+    
+    public static void resetCards(){
+        for(int i =0; i<24; i++){
+            view[i].setImage(null);
+        }
     }
 
 
