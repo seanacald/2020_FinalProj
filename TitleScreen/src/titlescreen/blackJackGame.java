@@ -34,18 +34,16 @@ public class blackJackGame {
     public static void display(MenuBar menuBar){
         Stage window = new Stage();
         
-        window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Black Jack");
-        window.setFullScreen(true);
+        //window.setFullScreen(true);
         //window.setMinWidth(250);
-        
+        menuBar.prefWidthProperty().bind(window.widthProperty());
         Button clse = new Button("Close the window");
         clse.setOnAction(e -> window.close());
-        VBox layout = new VBox(10);
-        layout.getChildren().addAll(menuBar, clse);
-        layout.setAlignment(Pos.CENTER);
+        Pane rootBJ = new Pane();
+        rootBJ.getChildren().addAll(menuBar);
         
-        Scene scene = new Scene(layout);
+        Scene scene = new Scene(rootBJ, 800, 600);
         window.setScene(scene);
         window.showAndWait();
     }

@@ -44,6 +44,7 @@ public class TitleScreen extends Application {
         MenuItem menuExit = new MenuItem("Exit");
         menu1.getItems().addAll(menuNew, menuOpen, menuSave, menuSaveAS, menuExit);
         menuBar.getMenus().add(menu1);
+        menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
         
         Button btnBlackJack = new Button("Black Jack");
         
