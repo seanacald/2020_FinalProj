@@ -16,6 +16,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -37,6 +38,12 @@ public class blackJackGame {
     static String userName;
     static double money = 100;
     static boolean readyToPlay = false;
+    static double currentBet = 0;
+    static int[] cards = new int[52];
+    static int[] cardValue = {2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,1,1,1,1};
+    static Random randomGen = new Random();
+    static int score = 0;
+    static int cardsUsed = 0;
     
     public static int display(MenuBar menuBar){
         Stage window = new Stage();
@@ -54,7 +61,7 @@ public class blackJackGame {
             btnRules.setVisible(false);
             btnQuit.setVisible(false);
             getUserInfo(rootBJ);
-            readyToPlay = true;
+           
             
         });
         
@@ -73,9 +80,11 @@ public class blackJackGame {
         
         checkIfForceClose(rootBJ, window);
         
-        if (readyToPlay == true){
-            //playGame();
-        }
+        
+
+            
+            
+        
         
         
         window.setOnCloseRequest(e -> {
@@ -146,7 +155,10 @@ public class blackJackGame {
                 submitUserName.setVisible(false);
                 txtUserName.setVisible(false);
                 lblEnterName.setVisible(false);
+                playGame(thePane);
             });
+           
+            
             
         });
     }
@@ -162,8 +174,97 @@ public class blackJackGame {
     }
     
     
-    public static void playGame(){
-        
+    public static void playGame(Pane thePane){
+                    //playGame();
+            
+            
+            Label lblBetP = new Label("Enter bet: ");
+            Label lblMon = new Label();
+            Label lblCurrentBet = new Label();
+            TextField txtBet = new TextField();
+            lblMon.setText("Current Money: " + Double.toString(money));
+            Button btnSubmit = new Button("Submit Bet");
+            Button btnHit = new Button("Hit me");
+            Button btnFreeze = new Button("Freeze");
+            
+            lblMon.setLayoutX(10);
+            lblMon.setLayoutY(30);
+            lblCurrentBet.setLayoutX(10);
+            lblCurrentBet.setLayoutY(50);
+            lblBetP.setLayoutX(10);
+            lblBetP.setLayoutY(550);
+            txtBet.setLayoutX(100);
+            txtBet.setLayoutY(550);
+            btnSubmit.setLayoutX(300);
+            btnSubmit.setLayoutY(550);
+            btnHit.setLayoutX(550);
+            btnHit.setLayoutY(550);
+            btnFreeze.setLayoutX(700);
+            btnFreeze.setLayoutY(550);
+            btnHit.setVisible(false);
+            btnFreeze.setVisible(false);
+            thePane.getChildren().addAll(lblMon,lblCurrentBet,lblBetP,txtBet,btnSubmit, btnHit, btnFreeze);
+            
+            btnSubmit.setOnAction(e->{
+                
+                currentBet = Double.parseDouble(txtBet.getText());
+                if(currentBet <0){ 
+                    txtBet.setText("Bet must be over 0$.");
+                }
+                else if (money - currentBet < 0){
+                    txtBet.setText("Not enough funds.");
+                }
+                else{
+                    score = 0;
+                    btnSubmit.setVisible(false);
+                    lblBetP.setVisible(false);
+                    txtBet.setVisible(false);
+                    btnHit.setVisible(true);
+                    btnFreeze.setVisible(true);
+                    money = money - currentBet;
+                    lblMon.setText("Current Money: "+ Double.toString(money));
+                    lblCurrentBet.setText("Current Bet: " + Double.toString(currentBet));
+                }  
+            });
+            
+            
+            btnHit.setOnAction(e -> {
+               int chosenCard;
+               while(true){
+                  chosenCard = getRandomNumber();
+                  if (cards[chosenCard] == 0){
+                      cards[chosenCard] = 1;
+                      cardsUsed+=1;
+                      if(cardsUsed==52){
+                          for(int j =0; j<52; j++){
+                              cards[j] = 0;
+                          }
+                          cardsUsed =0;
+                      }
+                      break;
+                  }
+               }
+               score += cardValue[chosenCard];
+               System.out.println(score);
+            });
+            
+            btnFreeze.setOnAction(e -> {
+                System.out.println("Froze on score: " + score);
+                btnHit.setVisible(false);
+                btnFreeze.setVisible(false);
+                btnSubmit.setVisible(true);
+                lblBetP.setVisible(true);
+                txtBet.setVisible(true);
+                
+            });
+            
     }
+    
+    public static int getRandomNumber(){
+        //Get number between 0 and 51
+        int randomNum = randomGen.nextInt(52);
+        return randomNum;
+    }
+    
     
 }
