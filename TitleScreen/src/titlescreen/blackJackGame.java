@@ -35,6 +35,9 @@ import javafx.stage.FileChooser;
 public class blackJackGame {
     static int closeEverything;
     static String userName;
+    static double money = 100;
+    static boolean readyToPlay = false;
+    
     public static int display(MenuBar menuBar){
         Stage window = new Stage();
         Pane rootBJ = new Pane();
@@ -50,7 +53,8 @@ public class blackJackGame {
             btnPlay.setVisible(false);
             btnRules.setVisible(false);
             btnQuit.setVisible(false);
-            playGame(rootBJ);
+            getUserInfo(rootBJ);
+            readyToPlay = true;
             
         });
         
@@ -67,14 +71,13 @@ public class blackJackGame {
            
         });
         
-        rootBJ.setOnKeyPressed(new EventHandler<KeyEvent>(){                      //Check if a key was pressed
-            public void handle(KeyEvent ke) {
-                if (ke.getCode().equals(KeyCode.ESCAPE)){
-                    closeEverything = 0;
-                    window.close();
-                }
-            }
-        });
+        checkIfForceClose(rootBJ, window);
+        
+        if (readyToPlay == true){
+            //playGame();
+        }
+        
+        
         window.setOnCloseRequest(e -> {
             e.consume();
             closeEverything = exitWindow.callExit();
@@ -102,7 +105,8 @@ public class blackJackGame {
     }
     
     
-    public static void playGame(Pane thePane){
+    public static void getUserInfo(Pane thePane){
+        //checkIfForceClose(thePane, theStage);
         Label lblWelcome = new Label("Welcome Player! Are you a new player? Or are you a returning player?");
         lblWelcome.setLayoutX(250);
         lblWelcome.setLayoutY(200);
@@ -119,7 +123,7 @@ public class blackJackGame {
         returningUser.setLayoutY(400);
         thePane.getChildren().addAll(lblWelcome, newUser, returningUser);
         
-        double money = 100;
+        
         newUser.setOnAction(e -> {
             lblWelcome.setVisible(false);
             newUser.setVisible(false);
@@ -130,7 +134,7 @@ public class blackJackGame {
             
             lblEnterName.setLayoutX(200);
             lblEnterName.setLayoutY(300);
-            txtUserName.setLayoutX(250);
+            txtUserName.setLayoutX(300);
             txtUserName.setLayoutY(300);
             submitUserName.setLayoutX(500);
             submitUserName.setLayoutY(300);
@@ -145,6 +149,21 @@ public class blackJackGame {
             });
             
         });
+    }
+    
+    public static void checkIfForceClose(Pane thePane, Stage theStage){
+          thePane.setOnKeyPressed((KeyEvent ke) -> {
+            if (ke.getCode().equals(KeyCode.ESCAPE)){
+                closeEverything = 0;
+                theStage.close();
+            }
+        });
+      
+    }
+    
+    
+    public static void playGame(){
+        
     }
     
 }
