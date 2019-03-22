@@ -32,7 +32,7 @@ import javafx.stage.FileChooser;
  * @author ivonu
  */
 public class TitleScreen extends Application {
-    static boolean doIStay;
+    static int doIStay;
     @Override
     public void start(Stage primaryStage) {
         final Menu menu1 = new Menu("File");
@@ -51,7 +51,7 @@ public class TitleScreen extends Application {
         btnBlackJack.setOnAction(e -> {
             primaryStage.hide();
             doIStay = blackJackGame.display(menuBar);
-            if(doIStay == false){
+            if(doIStay == 0){
                 primaryStage.close();
             }
             else{

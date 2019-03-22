@@ -31,8 +31,8 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 
 public class exitWindow {
-    static boolean answer;
-    public static boolean callExit(){
+    static int answer;
+    public static int callExit(){
         
         
         Stage window = new Stage();
@@ -49,14 +49,20 @@ public class exitWindow {
         Button btnYes = new Button("Yes");
         Button btnNo = new Button("No");
         btnYes.setOnAction(e -> {
-            answer = true;
+            answer = 1;
             window.close();
         });
         
         btnNo.setOnAction(e -> {
-            answer = false;
+            answer = 0;
             window.close();
         });
+        
+        window.setOnCloseRequest(e -> {
+            answer = 2;
+            window.close();
+        });
+        
         VBox layout = new VBox(10);
         layout.getChildren().addAll(label,btnYes,btnNo);
         layout.setAlignment(Pos.CENTER);

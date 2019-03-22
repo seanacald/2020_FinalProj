@@ -31,9 +31,10 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 
 public class blackJackGame {
-    static boolean closeEverything;
-    public static boolean display(MenuBar menuBar){
+    static int closeEverything;
+    public static int display(MenuBar menuBar){
         Stage window = new Stage();
+        Pane rootBJ = new Pane();
         
         window.setTitle("Black Jack");
         menuBar.prefWidthProperty().bind(window.widthProperty());
@@ -45,6 +46,8 @@ public class blackJackGame {
             btnPlay.setVisible(false);
             btnRules.setVisible(false);
             btnQuit.setVisible(false);
+            playGame(rootBJ);
+            
         });
         
         
@@ -54,14 +57,18 @@ public class blackJackGame {
        
         btnQuit.setOnAction(e -> {
             closeEverything = exitWindow.callExit();
-            window.close(); 
+            if (closeEverything != 2){ 
+                window.close(); 
+            }
            
         });
         
         window.setOnCloseRequest(e -> {
             e.consume();
             closeEverything = exitWindow.callExit();
-            window.close();
+            if (closeEverything !=2){
+                window.close();
+            }
         });
         
         btnPlay.setLayoutX(400);
@@ -73,7 +80,7 @@ public class blackJackGame {
         btnQuit.setLayoutX(400);
         btnQuit.setLayoutY(450);
         
-        Pane rootBJ = new Pane();
+        
         rootBJ.getChildren().addAll(menuBar, btnPlay, btnRules, btnQuit);
         
         Scene scene = new Scene(rootBJ, 800, 600);
@@ -81,4 +88,33 @@ public class blackJackGame {
         window.showAndWait();
         return closeEverything;
     }
+    
+    
+    public static void playGame(Pane thePane){
+        Label lblWelcome = new Label("Welcome Player! Are you a new player? Or are you a returning player?");
+        lblWelcome.setLayoutX(250);
+        lblWelcome.setLayoutY(200);
+        
+        Button newUser = new Button("New User");
+        Button returningUser = new Button("Returning User");
+        
+        newUser.setPrefSize(120, 70);
+        returningUser.setPrefSize(120, 70);
+        
+        newUser.setLayoutX(250);
+        newUser.setLayoutY(400);
+        returningUser.setLayoutX(450);
+        returningUser.setLayoutY(400);
+        thePane.getChildren().addAll(lblWelcome, newUser, returningUser);
+        final String userName = "";
+        double money = 100;
+        newUser.setOnAction(e -> {
+            newUser.setVisible(false);
+            returningUser.setVisible(false);
+            TextField txtUserName = new TextField();
+            Label lblEnterName = new Label("Enter Username");
+            thePane.getChildren().addAll(txtUserName, lblEnterName);
+        });
+    }
+    
 }
