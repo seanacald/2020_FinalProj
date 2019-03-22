@@ -70,7 +70,7 @@ public class TitleScreen extends Application {
         
         Scene scene = new Scene(root, 300, 250);
         
-        primaryStage.setTitle("Hello World!");
+        primaryStage.setTitle("Games Collection!");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
