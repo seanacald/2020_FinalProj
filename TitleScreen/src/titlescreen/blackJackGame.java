@@ -31,7 +31,8 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 
 public class blackJackGame {
-    public static void display(MenuBar menuBar){
+    static boolean closeEverything;
+    public static boolean display(MenuBar menuBar){
         Stage window = new Stage();
         
         window.setTitle("Black Jack");
@@ -52,7 +53,15 @@ public class blackJackGame {
         });
        
         btnQuit.setOnAction(e -> {
-           window.close(); 
+            closeEverything = exitWindow.callExit();
+            window.close(); 
+           
+        });
+        
+        window.setOnCloseRequest(e -> {
+            e.consume();
+            closeEverything = exitWindow.callExit();
+            window.close();
         });
         
         btnPlay.setLayoutX(400);
@@ -70,5 +79,6 @@ public class blackJackGame {
         Scene scene = new Scene(rootBJ, 800, 600);
         window.setScene(scene);
         window.showAndWait();
+        return closeEverything;
     }
 }
