@@ -55,18 +55,37 @@ public class blackJackGame {
     static int WIDTH = 800;
     static int HEIGHT = 600;
     static ArrayList<Image> deck = new ArrayList<>();
-    //static ArrayList<ImageView> view = new ArrayList<>();
     static ImageView[] view = new ImageView[24];        //You can get a maximum of 12 cards each per side.
+    static ImageView[] censoredCards = new ImageView[12];   //Enemy can have maximum of 12 cards.
     static int howManyCards = 0;
     static int howManyEnemyCards = 12;
+    static boolean firstPlay = true;
     
     public static int display(MenuBar menuBar){
         Stage window = new Stage();
         Pane rootBJ = new Pane();
-
-
+        
         window.setTitle("Black Jack");
         menuBar.prefWidthProperty().bind(window.widthProperty());
+        
+        
+        //Declares locations of image that will be used in ImageView as a background
+        String backgroundLocation = new File("src/titlescreen/background").getAbsolutePath();
+        
+        //Defines an image
+        ImageView theBackgroundView = new ImageView(new Image(new File(backgroundLocation).toURI().toString()+"/"+"background.jpg"));
+        
+        //Sets the inital Y position to be 15(so it doesn't mess with menubar)
+        theBackgroundView.setLayoutY(15);
+        
+        //Make the background span the entire width/height(-15) of the pane
+        theBackgroundView.setFitHeight(HEIGHT-15);
+        theBackgroundView.setFitWidth(WIDTH);
+        
+        //send theBackgroundView to be behind the nodes 
+        theBackgroundView.toBack();
+        rootBJ.getChildren().add(theBackgroundView);
+
         Button btnPlay = new Button("Play");
         Button btnRules = new Button("Rules");
         Button btnQuit = new Button("Quit");
@@ -75,48 +94,10 @@ public class blackJackGame {
             btnPlay.setVisible(false);
             btnRules.setVisible(false);
             btnQuit.setVisible(false);
-            String photoLocation = new File("src/titlescreen/cards").getAbsolutePath();
-            for (int i = 0; i<52; i++){
-                int j= i+1;
-                deck.add(new Image (new File(photoLocation).toURI().toString()+"/" + j +".jpg"));
-                if (i<24){
-                    view[i] = new ImageView();
-                    view[i].setFitHeight(120);
-                    view[i].setFitWidth(95);
-                    if(i<12){
-                        view[i].setLayoutX(i*7);
-                        view[i].setLayoutY(HEIGHT-120);
-                    }
-                    else{
-                        view[i].setLayoutX(WIDTH-95-(15*(i-12)));
-                        view[i].setLayoutY(30);
-                    }
-                    //view[i].setImage(deck.get(i));
-                    rootBJ.getChildren().add(view[i]);
-                }
-            }
-            /*
-            view[12].setImage(deck.get(50));
-            view[13].setImage(deck.get(49));
-            view[11].setImage(deck.get(30));
-            rootBJ.getChildren().addAll(view[11], view[12],view[13]);
-            */
-            //ImageView view0 = new ImageView(deck.get(51));
-            //stack
-            /*view[0].setImage(deck.get(51));
-            view[1].setImage(deck.get(50));
-            view[0].setImage(deck.get(35));
-            view[0].setVisible(false);
-            view[1].setLayoutX(15);
-            rootBJ.getChildren().addAll(view[0],view[1]);
-            i*15=position
-            
-            */
+            initalizeCards(rootBJ);
             getUserInfo(rootBJ);
-
-
         });
-
+        
 
         btnRules.setOnAction(e ->{
             blackJackRules.display();
@@ -130,15 +111,10 @@ public class blackJackGame {
 
         });
 
+        
         checkIfForceClose(rootBJ, window);
-
-
-
-
-
-
-
-
+        
+        
         window.setOnCloseRequest(e -> {
             e.consume();
             closeEverything = exitWindow.callExit();
@@ -156,7 +132,7 @@ public class blackJackGame {
         btnQuit.setLayoutX(WIDTH/2);
         btnQuit.setLayoutY(HEIGHT-150);
 
-
+        
         rootBJ.getChildren().addAll(menuBar, btnPlay, btnRules, btnQuit);
         //800,600
         Scene scene = new Scene(rootBJ, WIDTH, HEIGHT);
@@ -267,6 +243,11 @@ public class blackJackGame {
             thePane.getChildren().addAll(lblMon,lblCurrentBet,lblBetP,txtBet,btnSubmit, btnHit, btnFreeze);
 
             btnSubmit.setOnAction(e->{
+                if(firstPlay !=true){
+                    resetCardPosition(HEIGHT-120, 30);
+                    resetCards();
+                }
+                firstPlay = false;
                 howManyCards = 0;
                 howManyEnemyCards = 12;
                 currentBet = Double.parseDouble(txtBet.getText());
@@ -336,6 +317,11 @@ public class blackJackGame {
                  System.out.println("Enemy got: " + cardValue[chosenCard]);
                  enemyScore += cardValue[chosenCard];
                  view[howManyEnemyCards].setImage(deck.get(chosenCard));
+                 if(howManyEnemyCards-12 >0){
+                        System.out.println(howManyEnemyCards-12);
+                        censoredCards[howManyEnemyCards-12].setVisible(true);
+                        censoredCards[howManyEnemyCards-12].toFront();
+                 }
                  howManyEnemyCards+=1;
                }
                 
@@ -365,6 +351,13 @@ public class blackJackGame {
                      }
                      System.out.println("Enemy got: " + cardValue[chosenCard]);
                      enemyScore += cardValue[chosenCard];
+                     view[howManyEnemyCards].setImage(deck.get(chosenCard));
+                     if(howManyEnemyCards-12 >0){
+                        System.out.println(howManyEnemyCards-12);
+                        censoredCards[howManyEnemyCards-12].setVisible(true);
+                        censoredCards[howManyEnemyCards-12].toFront();
+                    }
+                     howManyEnemyCards+=1;
                      if(enemyScore >16){
                         break;
                      }
@@ -373,9 +366,11 @@ public class blackJackGame {
                  
                }
                 
+                //Print to console users score, and the enemys score
                 System.out.println("Your score was: " + score);
                 System.out.println("Enemy score was: " + enemyScore);
                 
+                //Determines a winner, and gives appropriate reward
                 if(score >21 ){
                     if(enemyScore >21){
                         System.out.println("Tie.");
@@ -406,8 +401,13 @@ public class blackJackGame {
                 else{
                     System.out.println("You lose.");
                 }
+                
+                //Updates the money in the display at the top left
                 lblMon.setText("Current Money: "+ Double.toString(money));
-                resetCards();
+                
+                //Removes the censor, and displays all the cards for the users to see
+                resetCensor();
+                resetCardPosition(HEIGHT/2, HEIGHT/2);
             });
 
     }
@@ -417,12 +417,84 @@ public class blackJackGame {
         int randomNum = randomGen.nextInt(52);
         return randomNum;
     }
+
+    public static void resetCensor(){
+        //This function removes the censor, 
+        //so that censor cards won't be seen when not needed.
+        for (int j = 1; j<howManyEnemyCards-12; j++){
+            censoredCards[j].setVisible(false);
+        }
+    }
     
     public static void resetCards(){
+        //Resets all pictures of cards.
         for(int i =0; i<24; i++){
             view[i].setImage(null);
         }
     }
 
-
+    public static void resetCardPosition(int ourPos, int enemyPos){
+        //This function is used after the cards are put to the center of the screen.
+        //This function puts the cards back in their original location
+        for (int i =0; i<12; i++){
+            view[i].setLayoutY(ourPos);
+            view[i+12].setLayoutY(enemyPos);
+        }
+    }
+    
+    public static void initalizeCards(Pane thePane){
+        //Declares locations of images that will be used in ImageViews
+        String photoLocation = new File("src/titlescreen/cards").getAbsolutePath();
+        String backOfCardLocation = new File("src/titlescreen/cards/back").getAbsolutePath();
+        
+        //Defines an image
+        Image backOfCard = new Image(new File(backOfCardLocation).toURI().toString()+"/"+"redback.jpg");
+        
+        //Loops through the entire deck of cards
+        for (int i = 0; i<52; i++){
+                //Adds the images of the cards to the deck
+                int j= i+1;
+                deck.add(new Image (new File(photoLocation).toURI().toString()+"/" + j +".jpg"));
+                
+                //Sets the position for the users and the enemys cards
+                if (i<24){
+                    view[i] = new ImageView();
+                    view[i].setFitHeight(120);
+                    view[i].setFitWidth(95);
+                    if(i<12){
+                        //Sets the users cards
+                        view[i].setLayoutX(i*7);
+                        view[i].setLayoutY(HEIGHT-120);
+                        //The censored cards (so user can't see what enemy is holding)
+                        censoredCards[i] = new ImageView();
+                        censoredCards[i].setFitHeight(120);
+                        censoredCards[i].setFitWidth(95);
+                        censoredCards[i].setLayoutX(WIDTH-95-(15*(i)));
+                        censoredCards[i].setLayoutY(30);
+                        censoredCards[i].setImage(backOfCard);
+                        
+                        //Initally false, when the enemy draws a second+ card,
+                        //will be changed to true.
+                        censoredCards[i].setVisible(false);
+                        
+                        //Adds the card to the pane
+                        thePane.getChildren().add(censoredCards[i]);
+                        
+                        
+                    }
+                    else{
+                        //Sets the enemys cards
+                        view[i].setLayoutX(WIDTH-95-(15*(i-12)));
+                        view[i].setLayoutY(30);
+                    }
+                    //Add users and enemys cards to the pane
+                    thePane.getChildren().add(view[i]);
+                    
+                }
+            }
+    }
+            
+        
+ 
+    
 }
