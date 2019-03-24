@@ -8,11 +8,11 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="TitleScreen.jar" size="9081" download="eager" />
+    <jar href="TitleScreen.jar" size="15158" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="TitleScreen" >
     <param name="requiredFXVersion" value="8.0+"/>
   </applet-desc>
-  <jfx:javafx-desc  width="800" height="600" main-class="titlescreen.TitleScreen"  name="TitleScreen" />
+  <jfx:javafx-desc  width="800" height="600" main-class="game.pkg4_24.Game4_24"  name="TitleScreen" />
   <update check="always"/>
 </jnlp>
