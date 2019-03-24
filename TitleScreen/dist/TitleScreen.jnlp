@@ -8,7 +8,11 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+<<<<<<< HEAD
+    <jar href="TitleScreen.jar" size="22024497" download="eager" />
+=======
     <jar href="TitleScreen.jar" size="15158" download="eager" />
+>>>>>>> Ken
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="TitleScreen" >
     <param name="requiredFXVersion" value="8.0+"/>

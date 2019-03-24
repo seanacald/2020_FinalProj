@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -33,6 +34,7 @@ import javafx.stage.FileChooser;
  */
 public class TitleScreen extends Application {
     static int doIStay;
+    private String title = "Welcome to the Arcade!!!";
     @Override
     public void start(Stage primaryStage) {
         final Menu menu1 = new Menu("File");
@@ -48,7 +50,41 @@ public class TitleScreen extends Application {
         
         Button btnBlackJack = new Button("Black Jack");
         
+        Label titleLabel = new Label("");
+        titleLabel.setLayoutX(300/2);
+        titleLabel.setLayoutY(20);
+        
+        
+        Thread theThread = new Thread(() -> {
+            try {
+                while (true) {
+                    if (titleLabel.getText().trim().length() == 24){
+                        title = "Welcome to the Arcade!";
+                    }
+                    else{
+                        title = "Welcome to the Arcade!!!";
+                    }
+                
+                Platform.runLater(() -> {
+                    titleLabel.setText(title);
+                });
+                Thread.sleep(200);
+            }
+        }
+        catch (InterruptedException ex) {
+
+        }
+        });
+        theThread.start();
+        
+      primaryStage.setOnCloseRequest(e -> {
+            e.consume();
+            theThread.stop();
+            primaryStage.close();
+        });
+      
         btnBlackJack.setOnAction(e -> {
+            theThread.yield();
             primaryStage.hide();
             doIStay = blackJackGame.display(menuBar);
             if(doIStay == 0){
@@ -65,8 +101,11 @@ public class TitleScreen extends Application {
 
         btnBlackJack.setLayoutX(20);
         btnBlackJack.setLayoutY(30);
+        
+        
+        
         Pane root = new Pane();
-        root.getChildren().addAll(menuBar, btnBlackJack);
+        root.getChildren().addAll(menuBar, btnBlackJack, titleLabel);
         
         Scene scene = new Scene(root, 300, 250);
         
