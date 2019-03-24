@@ -21,6 +21,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -44,7 +45,7 @@ import javafx.scene.text.*;
 public class blackJackGame {
   static int closeEverything;
   static String userName;
-  static double money = 100;
+  static double money;
   static boolean readyToPlay = false;
   static double currentBet = 0;
   static int[] cards = new int[52];
@@ -53,7 +54,7 @@ public class blackJackGame {
   static int score = 0;
   static int enemyScore = 0;
   static int cardsUsed = 0;
-
+  
   static int WIDTH = 800;
   static int HEIGHT = 600;
   static ArrayList<Image> deck = new ArrayList<>();
@@ -63,6 +64,15 @@ public class blackJackGame {
   static int howManyEnemyCards = 12;
   static boolean firstPlay = true;
   static Font Helvetica = Font.font("Helvetica", FontWeight.BOLD, 33);
+  
+  
+  static MediaPlayer mediaPlayer;
+  static boolean mediaStarted = false;
+  
+  static boolean firstThreadRun = true;
+  //static Label lblmyScore = new Label();
+  //static Label lblenemyScore = new Label();
+  
   
   public static int display(MenuBar menuBar){
     Stage window = new Stage();
@@ -94,6 +104,7 @@ public class blackJackGame {
     Button btnQuit = new Button("Quit");
 
     btnPlay.setOnAction(e -> {
+      money = 100;
       btnPlay.setVisible(false);
       btnRules.setVisible(false);
       btnQuit.setVisible(false);
@@ -109,7 +120,10 @@ public class blackJackGame {
     btnQuit.setOnAction(e -> {
       closeEverything = exitWindow.callExit();
       if (closeEverything != 2){
-        window.close();
+        if(mediaStarted == true){
+            mediaPlayer.stop();
+        }
+        window.close(); 
       }
 
     });
@@ -122,6 +136,9 @@ public class blackJackGame {
       e.consume();
       closeEverything = exitWindow.callExit();
       if (closeEverything !=2){
+        if(mediaStarted == true){
+            mediaPlayer.stop();
+        }
         window.close();
       }
     });
@@ -212,7 +229,8 @@ public class blackJackGame {
     //playGame();
     String whereIsMP3 = new File("src/titlescreen/Casino.wav").getAbsolutePath();
     Media media = new Media(new File(whereIsMP3).toURI().toString());
-    MediaPlayer mediaPlayer = new MediaPlayer(media);
+    mediaPlayer = new MediaPlayer(media);
+    mediaStarted = true;
     //Has music loop
     mediaPlayer.setAutoPlay(true);
     mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
@@ -227,7 +245,32 @@ public class blackJackGame {
     Button btnSubmit = new Button("Submit Bet");
     Button btnHit = new Button("Hit me");
     Button btnFreeze = new Button("Freeze");
-
+    
+    Button btnRestart = new Button("Restart");
+    btnRestart.setVisible(false);
+    //btnRestart.setLayoutX(195);
+    btnRestart.setLayoutY(HEIGHT-90);
+    btnRestart.setPrefWidth((WIDTH/2) - 0.25);
+    btnRestart.setPrefHeight(90);
+    
+    Button btnGOQuit = new Button("Quit");
+    btnGOQuit.setVisible(false);
+    btnGOQuit.setLayoutX((WIDTH/2) + 0.25);
+    btnGOQuit.setLayoutY(HEIGHT-90);
+    btnGOQuit.setPrefWidth((WIDTH/2) - 0.25);
+    btnGOQuit.setPrefHeight(90);
+    
+    Label lblGameOver = new Label("Uh oh! It appears you are out of funds. Play again?"); 
+    lblGameOver.setFont(Helvetica);
+    lblGameOver.setTextFill(Color.YELLOW);
+    lblGameOver.setLayoutX(5.5);
+    lblGameOver.setLayoutY(HEIGHT-155);
+    lblGameOver.setVisible(false);
+    
+    
+    //lblmyScore.setFont(Helvetica);
+    //lblenemyScore.setFont(Helvetica);
+    
     lblMon.setFont(Helvetica);
     lblMon.setTextFill(Color.TURQUOISE);        //Color.LIGHTCYAN       Color.TURQUOISE
     lblBetP.setFont(Helvetica);
@@ -254,13 +297,21 @@ public class blackJackGame {
     btnHit.setVisible(false);
     btnFreeze.setVisible(false);
 
-    thePane.getChildren().addAll(lblMon,lblCurrentBet,lblBetP,txtBet,btnSubmit, btnHit, btnFreeze);
+    thePane.getChildren().addAll(lblMon,lblCurrentBet,lblBetP,txtBet,btnSubmit, btnHit, btnFreeze, btnRestart, btnGOQuit, lblGameOver/*, lblmyScore, lblenemyScore*/);
 
     btnSubmit.setOnAction(e->{
       if(firstPlay !=true){
         resetCardPosition(HEIGHT-120, 30);
         resetCards();
       }
+      /*
+      lblmyScore.setVisible(false);
+      lblenemyScore.setVisible(false);
+      lblmyScore.setLayoutY(HEIGHT/2 - 40);
+      lblmyScore.setLayoutX(0);
+      lblenemyScore.setLayoutY(HEIGHT/2 - 40);
+      lblenemyScore.setLayoutX(WIDTH-40);
+*/
       firstPlay = false;
       howManyCards = 0;
       howManyEnemyCards = 12;
@@ -379,7 +430,7 @@ public class blackJackGame {
         }
 
       }
-
+      //runThread(score, enemyScore, thePane);
       //Print to console users score, and the enemys score
       System.out.println("Your score was: " + score);
       System.out.println("Enemy score was: " + enemyScore);
@@ -394,6 +445,33 @@ public class blackJackGame {
         else{
           //You lose.
           System.out.println("You lose.");
+          if(money == 0){
+            btnRestart.setVisible(true);
+            btnGOQuit.setVisible(true);
+            lblGameOver.setVisible(true);
+            btnSubmit.setVisible(false);
+            txtBet.setVisible(false);
+            lblBetP.setVisible(false);
+            btnRestart.setOnAction(f -> {
+                gameOver();
+                btnRestart.setVisible(false);
+                btnGOQuit.setVisible(false);
+                lblGameOver.setVisible(false);
+                btnSubmit.setVisible(true);
+                txtBet.setVisible(true);
+                lblBetP.setVisible(true);
+                lblMon.setText("Current Money: "+ Double.toString(money));
+                lblCurrentBet.setText("Current Bet: 0.0" );
+            });
+            
+            btnGOQuit.setOnAction(g -> {
+                closeEverything = exitWindow.callExit();
+                if (closeEverything != 2){
+                    mediaPlayer.stop();
+                    window.close();
+                }
+            });
+          }
         }
       }
 
@@ -414,6 +492,33 @@ public class blackJackGame {
       }
       else{
         System.out.println("You lose.");
+        if(money == 0){
+            btnRestart.setVisible(true);
+            btnGOQuit.setVisible(true);
+            lblGameOver.setVisible(true);
+            btnSubmit.setVisible(false);
+            txtBet.setVisible(false);
+            lblBetP.setVisible(false);
+            btnRestart.setOnAction(f -> {
+                gameOver();
+                btnRestart.setVisible(false);
+                btnGOQuit.setVisible(false);
+                lblGameOver.setVisible(false);
+                btnSubmit.setVisible(true);
+                txtBet.setVisible(true);
+                lblBetP.setVisible(true);
+                lblMon.setText("Current Money: "+ Double.toString(money));
+                lblCurrentBet.setText("Current Bet: 0.0" );
+            });
+            btnGOQuit.setOnAction(g -> {
+                closeEverything = exitWindow.callExit();
+                if (closeEverything != 2){
+                    mediaPlayer.stop();
+                    window.close();
+                }
+            });
+            
+        }
       }
 
       //Updates the money in the display at the top left
@@ -506,6 +611,66 @@ public class blackJackGame {
 
       }
     }
+    
+    
+    
+  }
+  /*
+  public static void runThread(int myScore, int enemyScore, Pane thePane){
+
+      lblmyScore.setText(myScore+"");
+      lblenemyScore.setText(enemyScore+"");
+      
+      lblmyScore.setVisible(true);
+      lblenemyScore.setVisible(true);
+
+      Thread theThread = new Thread(() -> {
+          try {
+              while (true) {
+                  if (lblmyScore.getLayoutX() == 100){
+                      break;
+                  }
+                  else{
+                      lblmyScore.setLayoutX(lblmyScore.getLayoutX() + 5);
+                  }
+
+                  Thread.sleep(100);
+              }
+          }
+          catch (InterruptedException ex) {
+              
+          }
+      });
+
+      Thread theOtherThread = new Thread(() -> {
+          try {
+              while (true) {
+                  if (lblenemyScore.getLayoutX() == WIDTH-100){
+                      break;
+                  }
+                  else{
+                      lblenemyScore.setLayoutX(lblenemyScore.getLayoutX() - 5);
+                  }
+                  Thread.sleep(100);
+              }
+          }
+          catch (InterruptedException ex) {
+              
+          }
+      });
+      System.out.println("HAHA");
+      theThread.start();
+      theOtherThread.start();
+      theThread.yield(); 
+      theOtherThread.yield();
+      
+  }
+*/
+  
+  public static void gameOver(){
+      //Reset user to have their old money value
+      money = 100;
+      //potential loss counter
   }
 
 
