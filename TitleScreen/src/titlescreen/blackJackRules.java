@@ -1,8 +1,11 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* Isaiah von Uders
+* March 25th, 2019
+* Final Project
+* Black Jack - blackJackRules
+* This program is an additional file used to inform the user of the rules of 
+* blackjack.
+*/
 package titlescreen;
 import java.io.BufferedReader;
 import java.io.File;

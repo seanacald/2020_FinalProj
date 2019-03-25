@@ -1,8 +1,11 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* Isaiah von Uders
+* March 25th, 2019
+* Final Project
+* Black Jack - exitWindow
+* This program is an additional file used to figure out what exactly the user
+* wants to do when closing a window.
+*/
 package titlescreen;
 
 /**

@@ -1,7 +1,21 @@
 /*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
+* Isaiah von Uders
+* March 25th, 2019
+* Final Project
+* Black Jack
+* This program is one of many programs/games that will be used in our arcade application.
+* This program simulates the game "Black Jack" the famous Casino game.
+* This program uses:
+* Color: To change the color of objects/nodes
+* File IO: For saving / Loading data about the user and their balance
+* Font: To alter fonts of objects/nodes (specifically to Helvetica)
+* Image/ImageView: For processing pictures (specifically cards)
+* KeyCode: For checking if the user presses ESCAPE to close the program
+* Logger: For handling additional errors (specifically for file IO)
+* Media/MediaView/MediaPlayer: To play background "Casino Themed" Music
+* Menu/MenuBar/MenuItem: For allowing the user to save their data, and another way to quit the program
+* Multiple Scenes/Stages for processing specific events (exit confirmation, opening/saving files)
+* Random: For casino-like randomness when getting cards
 */
 package titlescreen;
 
@@ -45,7 +59,7 @@ public class blackJackGame {
   static int closeEverything;
   static String userName;
   static double money;
-  static double highestMoney = money;
+  //static double highestMoney = money;
   static boolean readyToPlay = false;
   static double currentBet = 0;
   static int[] cards = new int[52];
@@ -69,6 +83,10 @@ public class blackJackGame {
   static MediaPlayer mediaPlayer;
   static boolean mediaStarted = false;
   
+  static Menu theMenu = new Menu("File");
+  static MenuBar menuBar = new MenuBar();
+  static MenuItem menuSave = new MenuItem("Save");
+  static MenuItem menuExit = new MenuItem("Exit");
   
   public static int display(){
       
@@ -103,7 +121,38 @@ public class blackJackGame {
     Button btnPlay = new Button("Play");
     Button btnRules = new Button("Rules");
     Button btnQuit = new Button("Quit");
+    
+    //If the menu isn't already defined, define it.
+    //For bug fixing, if user returned to main menu then opened game again
+    //The program would try to create an additional menu.
+    if(menuBar.getMenus().isEmpty() == true){
+        //Adds the menu to the menubar
+        menuBar.getMenus().add(theMenu);
+        //Adds the menu items (save/exit) to the menu
+        theMenu.getItems().addAll(menuSave, menuExit);
+        
+        //Makes the menubar scale with the width of the program
+        menuBar.prefWidthProperty().bind(window.widthProperty());
+    }
+    
+    //Disables save at the start.
+    menuSave.setDisable(true);
+    
+    menuExit.setOnAction(e -> {
+      //Close the game, and check if there will be a return to the main menu
+      closeEverything = exitWindow.callExit();
+      if (closeEverything != 2){
+        if(mediaStarted == true){
+            //If there is audio playing, suspend it.
+            mediaPlayer.stop();
+        }
+        //Close the window
+        window.close(); 
+      }
 
+    });
+    
+    
     //Updates dimensions for buttons, sets the button font to be Helvetica
     btnPlay.setPrefHeight(160);
     btnPlay.setPrefWidth(WIDTH/3 - 15);
@@ -218,7 +267,7 @@ public class blackJackGame {
     
     
     //Add the nodes to the pane
-    rootBJ.getChildren().addAll(btnPlay, btnRules, btnQuit, lblonlyWelcome, lblonlyTo, lblonlyBlackJack);
+    rootBJ.getChildren().addAll(btnPlay, btnRules, btnQuit, lblonlyWelcome, lblonlyTo, lblonlyBlackJack, menuBar);
 
     
     //Add the pane to the scene, and then add the scene to the window
@@ -283,21 +332,52 @@ public class blackJackGame {
       //Sets the color of the text in lblEnterName to be YELLOW
       lblEnterName.setTextFill(Color.YELLOW);
       
+      //BUG FIX: If user had entered a name with a space, and tried to load their save
+      //BUG FIX: The program would crash due to how the program handles opening data.
+      
+      //Creates a new Label with the ERROR text.
+      Label lblEnterNameERROR = new Label("ERROR: You cannot have a space in your name!");
+      
+      //Sets the font to Helvetica, sets the color of the text to yellow
+      lblEnterNameERROR.setFont(Helvetica);
+      lblEnterNameERROR.setTextFill(Color.YELLOW);
+      
+      //Sets the X,Y coordinates of the Label
+      lblEnterNameERROR.setLayoutX(30);
+      lblEnterNameERROR.setLayoutY(500);
+      
+      //Make this label not originally visible
+      lblEnterNameERROR.setVisible(false);
+      
+      
       //Add the new nodes to the pane
-      thePane.getChildren().addAll(txtUserName, lblEnterName, submitUserName);
+      thePane.getChildren().addAll(txtUserName, lblEnterName, submitUserName,lblEnterNameERROR);
       
       //When the user submits their username
       submitUserName.setOnAction(f -> {
         //Save the name they entered in userName
         userName = txtUserName.getText();
+        if(userName.contains(" ") == true){
+            //BUG FIX: If user had entered a name with a space, and tried to load their save
+            //BUG FIX: The program would crash due to how the program handles opening data.
+            
+            //If the user has a space in their name
+            //Prevents the user from continuing if they have a name with a space in it.
+            lblEnterNameERROR.setVisible(true);
+            
+        }
+        else{
+            if(lblEnterNameERROR.isVisible() == true){
+                lblEnterNameERROR.setVisible(false);
+            }
+            //Hide all the other nodes
+            submitUserName.setVisible(false);
+            txtUserName.setVisible(false);
+            lblEnterName.setVisible(false);
         
-        //Hide all the other nodes
-        submitUserName.setVisible(false);
-        txtUserName.setVisible(false);
-        lblEnterName.setVisible(false);
-        
-        //Start the actual game
-        playGame(thePane,window);
+            //Start the actual game
+            playGame(thePane,window);
+        }
       });
 
 
@@ -362,7 +442,8 @@ public class blackJackGame {
 
 
   public static void playGame(Pane thePane, Stage window){
-      
+    menuSave.setDisable(false);
+    createSave();  
     //Check if user closes the game  
     checkIfForceClose(thePane, window);
     
@@ -706,6 +787,8 @@ public class blackJackGame {
                 txtBet.setVisible(true);
                 lblBetP.setVisible(true);
                 lblMon.setText("Current Money: "+ Double.toString(money));
+                
+                //BUG FIXING: If the user enters an invalid bet, make it temporarily say the bet is 0.0$.
                 lblCurrentBet.setText("Current Bet: 0.0" );
             });
             
@@ -774,6 +857,8 @@ public class blackJackGame {
                 txtBet.setVisible(true);
                 lblBetP.setVisible(true);
                 lblMon.setText("Current Money: "+ Double.toString(money));
+                
+                //BUG FIXING: If the user enters an invalid bet, make it temporarily say the bet is 0.0$.
                 lblCurrentBet.setText("Current Bet: 0.0" );
             });
             btnGOQuit.setOnAction(g -> {
@@ -892,6 +977,35 @@ public class blackJackGame {
       money = 100;
   }
 
+  public static void createSave(){
+      menuSave.setOnAction(e -> {
+          //Opens a new stage that will be used for the user to save
+          Stage fileSaver = new Stage();
+          
+          //Creates a filechooser and sets the title of it to "Save your progress
+          FileChooser fc = new FileChooser();
+          fc.setTitle("Save your progress");
+          
+          //Gets the file the user chooses
+          File file = fc.showSaveDialog(fileSaver);
+          
+          //Read through the file, and save the username and money value
+          try{
+              //Use a printwriter to go through the file
+              PrintWriter outputfile = new PrintWriter(file);
+              //Write the userName and the money seperated by a space
+              outputfile.write(userName);
+              outputfile.write(" ");
+              outputfile.write(money+"");
+              outputfile.close();
+          }
+          
+          //Catch any errors, and print them out.
+          catch(IOException ex){
+              Logger.getLogger(blackJackGame.class.getName()).log(Level.SEVERE, null, ex);
+          }
+      });
+  }
 
 
 
