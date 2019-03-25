@@ -93,12 +93,30 @@ public class blackJackGame {
     //send theBackgroundView to be behind the nodes
     theBackgroundView.toBack();
     rootBJ.getChildren().add(theBackgroundView);
-
+    
+    //Creates three new labels saying Welcome To Black Jack!
+    Label lblonlyWelcome = new Label("Welcome");
+    Label lblonlyTo = new Label("To");
+    Label lblonlyBlackJack = new Label("Black Jack!");
+    
     //Defines new buttons
     Button btnPlay = new Button("Play");
     Button btnRules = new Button("Rules");
     Button btnQuit = new Button("Quit");
 
+    //Updates dimensions for buttons, sets the button font to be Helvetica
+    btnPlay.setPrefHeight(160);
+    btnPlay.setPrefWidth(WIDTH/3 - 15);
+    btnPlay.setFont(Helvetica);
+    
+    btnRules.setPrefHeight(160);
+    btnRules.setPrefWidth(WIDTH/3 - 15);
+    btnRules.setFont(Helvetica);
+    
+    btnQuit.setPrefHeight(160);
+    btnQuit.setPrefWidth(WIDTH/3 - 15);
+    btnQuit.setFont(Helvetica);
+    
     btnPlay.setOnAction(e -> {
       //Set the money equal to 100 by default
       money = 100;
@@ -107,6 +125,11 @@ public class blackJackGame {
       btnPlay.setVisible(false);
       btnRules.setVisible(false);
       btnQuit.setVisible(false);
+      
+      //Hide the labels
+      lblonlyWelcome.setVisible(false);
+      lblonlyTo.setVisible(false);
+      lblonlyBlackJack.setVisible(false);
       
       //Setup cards
       initalizeCards(rootBJ);
@@ -155,17 +178,47 @@ public class blackJackGame {
     });
 
     //Defines locations for the buttons
-    btnPlay.setLayoutX(WIDTH/2);
-    btnPlay.setLayoutY(HEIGHT-450);
+    btnPlay.setLayoutX(7);
+    btnPlay.setLayoutY(HEIGHT-165);
 
-    btnRules.setLayoutX(WIDTH/2);
-    btnRules.setLayoutY(HEIGHT/2);
+    btnRules.setLayoutX(WIDTH - (2*WIDTH/3) + 8.5);
+    btnRules.setLayoutY(HEIGHT-165);
 
-    btnQuit.setLayoutX(WIDTH/2);
-    btnQuit.setLayoutY(HEIGHT-150);
+    btnQuit.setLayoutX(WIDTH - (WIDTH/3) + 8.5);
+    btnQuit.setLayoutY(HEIGHT-165);
 
+    
+    //Updates the font of the Labels (to Helvetica)
+    lblonlyWelcome.setFont(Helvetica);
+    lblonlyTo.setFont(Helvetica);
+    lblonlyBlackJack.setFont(Helvetica);
+    
+    //Updates the text color of the Labels (To YELLOW)
+    lblonlyWelcome.setTextFill(Color.YELLOW);
+    lblonlyTo.setTextFill(Color.YELLOW);
+    lblonlyBlackJack.setTextFill(Color.YELLOW);
+    
+    //Increases the font size of the text for each of the labels
+    lblonlyWelcome.setScaleX(5);
+    lblonlyWelcome.setScaleY(5);
+    lblonlyTo.setScaleX(5);
+    lblonlyTo.setScaleY(5);
+    lblonlyBlackJack.setScaleX(4.8);
+    lblonlyBlackJack.setScaleY(4.8);
+    
+    //Sets the location of the Labels
+    lblonlyWelcome.setLayoutX(WIDTH/2.445);
+    lblonlyWelcome.setLayoutY(15 + (33*1.5));
+    
+    lblonlyTo.setLayoutX(WIDTH/2.28);
+    lblonlyTo.setLayoutY(15 + (33*5.45));
+    
+    lblonlyBlackJack.setLayoutX(WIDTH/2.56);
+    lblonlyBlackJack.setLayoutY(15 + (33*9.67));
+    
+    
     //Add the nodes to the pane
-    rootBJ.getChildren().addAll(btnPlay, btnRules, btnQuit);
+    rootBJ.getChildren().addAll(btnPlay, btnRules, btnQuit, lblonlyWelcome, lblonlyTo, lblonlyBlackJack);
 
     
     //Add the pane to the scene, and then add the scene to the window
@@ -183,10 +236,15 @@ public class blackJackGame {
     checkIfForceClose(thePane, window);
     
     //Ask the user if they are a new or a returning player
-    Label lblWelcome = new Label("Welcome Player! Are you a new player? Or are you a returning player?");
-    lblWelcome.setLayoutX(250);
-    lblWelcome.setLayoutY(200);
-
+    Label lblWelcome = new Label("Welcome Player!\nAre you a new player?\nOr are you a returning player?");
+    lblWelcome.setLayoutX(220);
+    lblWelcome.setLayoutY(170);
+    //Sets the allignment of the label to be centered
+    lblWelcome.setAlignment(Pos.CENTER);
+    //Changes the font of the label to be Helvetica, and changes color of text to be YELLOW
+    lblWelcome.setFont(Helvetica);
+    lblWelcome.setTextFill(Color.YELLOW);
+    
     Button newUser = new Button("New User");
     Button returningUser = new Button("Returning User");
 
@@ -212,12 +270,18 @@ public class blackJackGame {
       TextField txtUserName = new TextField();
       Label lblEnterName = new Label("Enter Username");
       Button submitUserName = new Button("Submit");
-      lblEnterName.setLayoutX(200);
-      lblEnterName.setLayoutY(300);
-      txtUserName.setLayoutX(300);
+      lblEnterName.setLayoutX(70);
+      lblEnterName.setLayoutY(285);
+      txtUserName.setLayoutX(355);
       txtUserName.setLayoutY(300);
-      submitUserName.setLayoutX(500);
+      submitUserName.setLayoutX(555);
       submitUserName.setLayoutY(300);
+      
+      //Sets the font of lblEnterName to be Helvetica
+      lblEnterName.setFont(Helvetica);
+      
+      //Sets the color of the text in lblEnterName to be YELLOW
+      lblEnterName.setTextFill(Color.YELLOW);
       
       //Add the new nodes to the pane
       thePane.getChildren().addAll(txtUserName, lblEnterName, submitUserName);
