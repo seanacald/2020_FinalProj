@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package titlescreen;
+package game.pkg4_24;
 
 /**
  *
@@ -14,7 +14,7 @@ class Game {
     Game(){
         this.score=0;
     }
-
+    
     public int getScore(){
         return this.score;
     }
@@ -27,14 +27,22 @@ class Game {
     private double[] valList = {0,0,0,0};//stores original values
     private boolean buttonTurn=false;//false means term 1 will be set, true means term 2 will be set
     private int moveCount = 0;
-
+    private int solveCount=0;
+    private double totalTime;
+    public int getSolve(){
+        return this.solveCount;
+    }
+    public void setSolve(int val){
+        this.solveCount=val;
+    }
+    
     public void setVal(double val,int loc){
         this.valList[loc]=val;
     }
     public double[] getVals(){
         return this.valList;
     }
-
+    
     public int getMove(){
         return this.moveCount;
     }
@@ -44,7 +52,7 @@ class Game {
     public void resetMove(){
         this.moveCount=0;
     }
-
+    
     public void setTurn(boolean val){
         this.buttonTurn = val;
     }
@@ -75,7 +83,7 @@ class Game {
     public double get11(){
         return this.valList[3];
     }
-
+    
 
     public void setOp(int val){
         this.operation=val;
@@ -95,16 +103,21 @@ class Game {
     public double getTerm2(){
         return this.term2;
     }
-
+    public void startGame(){
+        this.totalTime=System.nanoTime();
+    }
     public void startTime(){
         this.startTime=System.nanoTime();
     }
     public void stopTime(){
         this.endTime=System.nanoTime();
     }
-
+    public double getTotalTime(){
+        return this.totalTime; 
+    }
     public void raise(){
         double time = (this.endTime-this.startTime)/1000000000;
+        this.totalTime = this.totalTime+time;
         int amount=0;
         if (time<=5.0){
             amount = 1000;//max score of 1000
@@ -117,4 +130,5 @@ class Game {
         }
         this.score = this.score + amount;
     }
+
 }
