@@ -32,9 +32,13 @@ public class blackJackRules {
         
         Stage window = new Stage();
         
+        //Prevent this user from interacting with other tabs/stages
         window.initModality(Modality.APPLICATION_MODAL);
+        
+        //Set the title of this window to be Rules
         window.setTitle("Rules");
         
+        //Create new labels that will state the rules of blackjack
         Label labelIntro = new Label();
         labelIntro.setText("Rules for BlackJack: ");
         
@@ -44,18 +48,21 @@ public class blackJackRules {
         Label lblRule4 = new Label("4. However, if the card you pull from the deck is plus your current total is greater than 21, you automatically lose.");
         Label lblRule5 = new Label("5. Each card has a specific value.");
         Label lblRule51 = new Label("5.1. Non-face cards are worth whatever number they are.");
-        Label lblRule52 = new Label("5.2. Face cards are worth 10;");
-        Label lblRule53 = new Label("5.3. Ace is either worth 1 or 11;");
+        Label lblRule52 = new Label("5.2. Face cards are worth 10.");
+        Label lblRule53 = new Label("5.3. Ace is worth 1.");
         Label lblRule54 = new Label("5.4. Jokers are not included.");
         Label lblRule6 = new Label("6. Once a card has been pulled, it cannot be pulled again until the deck runs out of cards, and it needs to be reshuffled.");
         Label lblRule7 = new Label("7. You can bet however much money you like. Each time you win, you double your money. But once you are out of money, it's game over!");
         
+        
+        //Create a button that says Got It, which allows the user to exit this window
         Button btnGotIt = new Button("Got it!");
         btnGotIt.setOnAction(e -> {
+           //When the Got It button is clicked, close the window, return to game
            window.close();
         });
         
-        
+        //Sets location of each of the labels
         labelIntro.setLayoutX(10);
         labelIntro.setLayoutY(10);
         
@@ -92,13 +99,18 @@ public class blackJackRules {
         lblRule7.setLayoutX(10);
         lblRule7.setLayoutY(340);
         
-        
+        //Sets location of the Got It Button
         btnGotIt.setLayoutX(750/2);
         btnGotIt.setLayoutY(370);
+        
+        //Creates a new Pane, and adds all the labels and the Got It button to it.
         Pane rulesBJPane = new Pane();
         rulesBJPane.getChildren().addAll(labelIntro,lblRule1, lblRule2, lblRule3, lblRule4, lblRule5, lblRule51, lblRule52, lblRule53, lblRule54, lblRule6, lblRule7, btnGotIt);
         
+        //Creates a new scene, with the pane, sets the dimensions to be 750 by 400
         Scene scene = new Scene(rulesBJPane, 750, 400);
+        
+        //Sets the scene of the window to be scene
         window.setScene(scene);
         window.showAndWait();
     
