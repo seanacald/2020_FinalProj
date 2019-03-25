@@ -37,56 +37,56 @@ public class TitleScreen extends Application {
     private String title = "Welcome to the Arcade!!!";
     @Override
     public void start(Stage primaryStage) {
-        final Menu menu1 = new Menu("File");
-        MenuBar menuBar = new MenuBar();
-        MenuItem menuNew = new MenuItem("New");
-        MenuItem menuOpen = new MenuItem("Open");
-        MenuItem menuSave = new MenuItem("Save");
-        MenuItem menuSaveAS = new MenuItem("Save As");
-        MenuItem menuExit = new MenuItem("Exit");
-        menu1.getItems().addAll(menuNew, menuOpen, menuSave, menuSaveAS, menuExit);
-        menuBar.getMenus().add(menu1);
-        menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
-        
+
         Button btnBlackJack = new Button("Black Jack");
         
         Label titleLabel = new Label("");
         titleLabel.setLayoutX(300/2);
         titleLabel.setLayoutY(20);
+
+        
         
         
         Thread theThread = new Thread(() -> {
             try {
                 while (true) {
-                    if (titleLabel.getText().trim().length() == 24){
+                    if (titleLabel.getText().trim().length() == 23){
                         title = "Welcome to the Arcade!";
+                    }
+                    else if (titleLabel.getText().trim().length() == 24){
+                        title = "Welcome to the Arcade!!";
                     }
                     else{
                         title = "Welcome to the Arcade!!!";
                     }
                 
-                Platform.runLater(() -> {
-                    titleLabel.setText(title);
-                });
-                Thread.sleep(200);
+                    Platform.runLater(() -> {
+                        titleLabel.setText(title);
+                    });
+                    Thread.sleep(200);
+                }
             }
-        }
-        catch (InterruptedException ex) {
-
-        }
+            catch (InterruptedException ex) {
+                System.out.println(ex);
+            }
         });
-        theThread.start();
         
+        theThread.start();
+
       primaryStage.setOnCloseRequest(e -> {
             e.consume();
             theThread.stop();
             primaryStage.close();
         });
       
+        //MenuBar menuBar = new MenuBar();
+        //menuBar = defineMenuBar.menuCreation(menuBar, primaryStage);
+        //menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
+        
         btnBlackJack.setOnAction(e -> {
             theThread.yield();
             primaryStage.hide();
-            doIStay = blackJackGame.display(menuBar);
+            doIStay = blackJackGame.display();
             if(doIStay == 0){
                 primaryStage.close();
             }
@@ -105,7 +105,7 @@ public class TitleScreen extends Application {
         
         
         Pane root = new Pane();
-        root.getChildren().addAll(menuBar, btnBlackJack, titleLabel);
+        root.getChildren().addAll(/*menuBar, */btnBlackJack, titleLabel);
         
         Scene scene = new Scene(root, 300, 250);
         

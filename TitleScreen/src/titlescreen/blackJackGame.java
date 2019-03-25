@@ -43,6 +43,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 
 public class blackJackGame {
+    
+  //Basic declarations used for program
   static int closeEverything;
   static String userName;
   static double money;
@@ -69,19 +71,14 @@ public class blackJackGame {
   static MediaPlayer mediaPlayer;
   static boolean mediaStarted = false;
   
-  static boolean firstThreadRun = true;
-  //static Label lblmyScore = new Label();
-  //static Label lblenemyScore = new Label();
   
-  
-  public static int display(MenuBar menuBar){
+  public static int display(){
+      
+    //Sets a new stage (with title Black Jack) and new pane
     Stage window = new Stage();
     Pane rootBJ = new Pane();
-
     window.setTitle("Black Jack");
-    menuBar.prefWidthProperty().bind(window.widthProperty());
-
-
+    
     //Declares locations of image that will be used in ImageView as a background
     String backgroundLocation = new File("src/titlescreen/background").getAbsolutePath();
 
@@ -99,28 +96,39 @@ public class blackJackGame {
     theBackgroundView.toBack();
     rootBJ.getChildren().add(theBackgroundView);
 
+    //Defines new buttons
     Button btnPlay = new Button("Play");
     Button btnRules = new Button("Rules");
     Button btnQuit = new Button("Quit");
 
     btnPlay.setOnAction(e -> {
+      //Set the money equal to 100 by default
       money = 100;
+      
+      //Hide the buttons
       btnPlay.setVisible(false);
       btnRules.setVisible(false);
       btnQuit.setVisible(false);
+      
+      //Setup cards
       initalizeCards(rootBJ);
+      
+      //Find out who is playing
       getUserInfo(rootBJ, window);
     });
 
 
     btnRules.setOnAction(e ->{
+      //Display the rules for blackjack
       blackJackRules.display();
     });
 
     btnQuit.setOnAction(e -> {
+      //Close the game, and check if there will be a return to the main menu
       closeEverything = exitWindow.callExit();
       if (closeEverything != 2){
         if(mediaStarted == true){
+            //If there is audio playing, suspend it.
             mediaPlayer.stop();
         }
         window.close(); 
@@ -128,11 +136,13 @@ public class blackJackGame {
 
     });
 
-
+    //Check if the user presses ESCAPE to close the game.
     checkIfForceClose(rootBJ, window);
 
 
     window.setOnCloseRequest(e -> {
+      //If the user clicks the X button at the top right of the screen
+      //Check if they want to return to the main menu or not.
       e.consume();
       closeEverything = exitWindow.callExit();
       if (closeEverything !=2){
@@ -143,6 +153,7 @@ public class blackJackGame {
       }
     });
 
+    //Defines locations for the buttons
     btnPlay.setLayoutX(WIDTH/2);
     btnPlay.setLayoutY(HEIGHT-450);
 
@@ -152,20 +163,24 @@ public class blackJackGame {
     btnQuit.setLayoutX(WIDTH/2);
     btnQuit.setLayoutY(HEIGHT-150);
 
-
-    rootBJ.getChildren().addAll(menuBar, btnPlay, btnRules, btnQuit);
-    //800,600
+    //Add the nodes to the pane
+    rootBJ.getChildren().addAll(btnPlay, btnRules, btnQuit);
+    
+    //Add the pane to the scene, and then add the scene to the window
     Scene scene = new Scene(rootBJ, WIDTH, HEIGHT);
     window.setScene(scene);
     window.showAndWait();
+    
+    //When the program closes, check if there is going to be a return to the main menu or not.
     return closeEverything;
   }
 
 
   public static void getUserInfo(Pane thePane, Stage window){
-      
+    //Check if the user presses ESCAPE
     checkIfForceClose(thePane, window);
-    //checkIfForceClose(thePane, theStage);
+    
+    //Ask the user if they are a new or a returning player
     Label lblWelcome = new Label("Welcome Player! Are you a new player? Or are you a returning player?");
     lblWelcome.setLayoutX(250);
     lblWelcome.setLayoutY(200);
@@ -173,49 +188,105 @@ public class blackJackGame {
     Button newUser = new Button("New User");
     Button returningUser = new Button("Returning User");
 
+    //Sets dimensions of buttons
     newUser.setPrefSize(120, 70);
     returningUser.setPrefSize(120, 70);
 
+    //Sets location of buttons, and adds them to the pane
     newUser.setLayoutX(250);
     newUser.setLayoutY(400);
     returningUser.setLayoutX(450);
     returningUser.setLayoutY(400);
     thePane.getChildren().addAll(lblWelcome, newUser, returningUser);
 
-
+    //If the user selects "New User"
     newUser.setOnAction(e -> {
+      //Remove/hide the previous nodes
       lblWelcome.setVisible(false);
       newUser.setVisible(false);
       returningUser.setVisible(false);
+      
+      //Sets up new nodes that and defines their coordinates
       TextField txtUserName = new TextField();
       Label lblEnterName = new Label("Enter Username");
       Button submitUserName = new Button("Submit");
-
       lblEnterName.setLayoutX(200);
       lblEnterName.setLayoutY(300);
       txtUserName.setLayoutX(300);
       txtUserName.setLayoutY(300);
       submitUserName.setLayoutX(500);
       submitUserName.setLayoutY(300);
-
-
+      
+      //Add the new nodes to the pane
       thePane.getChildren().addAll(txtUserName, lblEnterName, submitUserName);
+      
+      //When the user submits their username
       submitUserName.setOnAction(f -> {
+        //Save the name they entered in userName
         userName = txtUserName.getText();
+        
+        //Hide all the other nodes
         submitUserName.setVisible(false);
         txtUserName.setVisible(false);
         lblEnterName.setVisible(false);
+        
+        //Start the actual game
         playGame(thePane,window);
       });
 
 
 
     });
+    
+    //If the user selects Returning User
+    returningUser.setOnAction(e -> {
+        //Hides all the nodes
+        lblWelcome.setVisible(false);
+        newUser.setVisible(false);
+        returningUser.setVisible(false);
+        
+        //Opens a new stage that will be used to select the users save
+        Stage theFileOpener = new Stage();
+        
+        //Creates a filechooser and sets the title of it to "Open your save"
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Open your save");
+        
+        //Get the file the user chooses
+        File file = fc.showOpenDialog(theFileOpener);
+        
+        //Read through the file, and get the username and their money values
+        //from the file
+        try (BufferedReader theReader = new BufferedReader(new FileReader (file))){
+            String allText;
+            String[] nameAndScore = new String[2];
+            while((allText = theReader.readLine()) != null){
+                nameAndScore = allText.split(" ");
+                userName = nameAndScore[0];
+                money = Double.parseDouble(nameAndScore[1]);
+            }
+        }
+        
+        //Catch any errors, and print them out.
+        catch (Exception ex) {
+            Logger.getLogger(defineMenuBar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //Start the actual game
+        playGame(thePane,window);
+    });
+    
+    
+    
   }
 
   public static void checkIfForceClose(Pane thePane, Stage theStage){
-    thePane.setOnKeyPressed((KeyEvent ke) -> {
+      //Check what key the user pressed
+      thePane.setOnKeyPressed((KeyEvent ke) -> {
+      
+      //If the user presses escape
       if (ke.getCode().equals(KeyCode.ESCAPE)){
+        //Force close the program
         closeEverything = 0;
         theStage.close();
       }
@@ -225,12 +296,18 @@ public class blackJackGame {
 
 
   public static void playGame(Pane thePane, Stage window){
+      
+    //Check if user closes the game  
     checkIfForceClose(thePane, window);
-    //playGame();
+    
+    //Defines path for audio file
     String whereIsMP3 = new File("src/titlescreen/Casino.wav").getAbsolutePath();
     Media media = new Media(new File(whereIsMP3).toURI().toString());
+    
+    //Allows music to be played
     mediaPlayer = new MediaPlayer(media);
     mediaStarted = true;
+    
     //Has music loop
     mediaPlayer.setAutoPlay(true);
     mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
@@ -240,6 +317,7 @@ public class blackJackGame {
     Label lblBetP = new Label("Enter bet: ");
     Label lblMon = new Label();
     Label lblCurrentBet = new Label();
+    Label lblWelcome = new Label();
     TextField txtBet = new TextField();
     lblMon.setText("Current Money: " + Double.toString(money));
     Button btnSubmit = new Button("Submit Bet");
@@ -268,20 +346,24 @@ public class blackJackGame {
     lblGameOver.setVisible(false);
     
     
-    //lblmyScore.setFont(Helvetica);
-    //lblenemyScore.setFont(Helvetica);
+    lblWelcome.setText("Welcome " +userName + "!");
+    lblWelcome.setFont(Helvetica);
+    lblWelcome.setTextFill(Color.YELLOW);
     
     lblMon.setFont(Helvetica);
-    lblMon.setTextFill(Color.TURQUOISE);        //Color.LIGHTCYAN       Color.TURQUOISE
-    lblBetP.setFont(Helvetica);
-    lblBetP.setTextFill(Color.CYAN);
+    lblMon.setTextFill(Color.YELLOW);        //Color.LIGHTCYAN       Color.TURQUOISE
+    lblBetP.setFont(Helvetica);                 //CYAN AND TURQUOISE
+    lblBetP.setTextFill(Color.YELLOW);
     lblCurrentBet.setFont(Helvetica);
     lblCurrentBet.setTextFill(Color.YELLOW);
+    
     //Setting coordinates for each node
+    lblWelcome.setLayoutX(10);
+    lblWelcome.setLayoutY(30);
     lblMon.setLayoutX(10);
-    lblMon.setLayoutY(30);
+    lblMon.setLayoutY(80);
     lblCurrentBet.setLayoutX(10);
-    lblCurrentBet.setLayoutY(80);
+    lblCurrentBet.setLayoutY(130);
     lblBetP.setLayoutX(10);
     lblBetP.setLayoutY(HEIGHT-65);
     txtBet.setLayoutX(173);
@@ -297,21 +379,14 @@ public class blackJackGame {
     btnHit.setVisible(false);
     btnFreeze.setVisible(false);
 
-    thePane.getChildren().addAll(lblMon,lblCurrentBet,lblBetP,txtBet,btnSubmit, btnHit, btnFreeze, btnRestart, btnGOQuit, lblGameOver/*, lblmyScore, lblenemyScore*/);
+    thePane.getChildren().addAll(lblWelcome, lblMon,lblCurrentBet,lblBetP,txtBet,btnSubmit, btnHit, btnFreeze, btnRestart, btnGOQuit, lblGameOver/*, lblmyScore, lblenemyScore*/);
 
     btnSubmit.setOnAction(e->{
       if(firstPlay !=true){
         resetCardPosition(HEIGHT-120, 30);
         resetCards();
       }
-      /*
-      lblmyScore.setVisible(false);
-      lblenemyScore.setVisible(false);
-      lblmyScore.setLayoutY(HEIGHT/2 - 40);
-      lblmyScore.setLayoutX(0);
-      lblenemyScore.setLayoutY(HEIGHT/2 - 40);
-      lblenemyScore.setLayoutX(WIDTH-40);
-*/
+
       firstPlay = false;
       howManyCards = 0;
       howManyEnemyCards = 12;
@@ -615,57 +690,6 @@ public class blackJackGame {
     
     
   }
-  /*
-  public static void runThread(int myScore, int enemyScore, Pane thePane){
-
-      lblmyScore.setText(myScore+"");
-      lblenemyScore.setText(enemyScore+"");
-      
-      lblmyScore.setVisible(true);
-      lblenemyScore.setVisible(true);
-
-      Thread theThread = new Thread(() -> {
-          try {
-              while (true) {
-                  if (lblmyScore.getLayoutX() == 100){
-                      break;
-                  }
-                  else{
-                      lblmyScore.setLayoutX(lblmyScore.getLayoutX() + 5);
-                  }
-
-                  Thread.sleep(100);
-              }
-          }
-          catch (InterruptedException ex) {
-              
-          }
-      });
-
-      Thread theOtherThread = new Thread(() -> {
-          try {
-              while (true) {
-                  if (lblenemyScore.getLayoutX() == WIDTH-100){
-                      break;
-                  }
-                  else{
-                      lblenemyScore.setLayoutX(lblenemyScore.getLayoutX() - 5);
-                  }
-                  Thread.sleep(100);
-              }
-          }
-          catch (InterruptedException ex) {
-              
-          }
-      });
-      System.out.println("HAHA");
-      theThread.start();
-      theOtherThread.start();
-      theThread.yield(); 
-      theOtherThread.yield();
-      
-  }
-*/
   
   public static void gameOver(){
       //Reset user to have their old money value
