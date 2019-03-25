@@ -9,6 +9,8 @@ package titlescreen;
 *
 * @author ivonu
 */
+
+//Imports
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -313,12 +315,13 @@ public class blackJackGame {
     mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
     MediaView mediaViewer = new MediaView(mediaPlayer);
     thePane.getChildren().add(mediaViewer);
-
+    
+    //Defines labels that will be used to state who wins, and scores
     Label lblWinnerMe = new Label("Winner!");
     Label lblWinnerEnemy = new Label("Winner!");
     Label lblmyScore = new Label();
     Label lblenemyScore = new Label();
-    
+    //Sets location of following labels
     lblWinnerMe.setLayoutY(HEIGHT/2 + 130);
     lblWinnerEnemy.setLayoutY(HEIGHT/2 + 130);
     lblmyScore.setLayoutY(HEIGHT/2 - 55);
@@ -327,35 +330,39 @@ public class blackJackGame {
     lblWinnerEnemy.setLayoutX(WIDTH-125);
     lblenemyScore.setLayoutX(WIDTH-45);
     
-    
+    //Sets the font of each label to Helvetica
     lblWinnerMe.setFont(Helvetica);
     lblWinnerEnemy.setFont(Helvetica);
     lblmyScore.setFont(Helvetica);
     lblenemyScore.setFont(Helvetica);
     
+    //Sets the color of the text in each label to YELLOW
     lblWinnerMe.setTextFill(Color.YELLOW);
     lblWinnerEnemy.setTextFill(Color.YELLOW);
     lblmyScore.setTextFill(Color.CYAN);
     lblenemyScore.setTextFill(Color.TURQUOISE);
     
+    //Initally, start the labels off as invisible
     lblWinnerMe.setVisible(false);
     lblWinnerEnemy.setVisible(false);
     lblmyScore.setVisible(false);
     lblenemyScore.setVisible(false);
     
+    //Creates a bunch of labels that are used to help guide the user through the program
     Label lblBetP = new Label("Enter bet: ");
     Label lblMon = new Label();
     Label lblCurrentBet = new Label();
     Label lblWelcome = new Label();
     TextField txtBet = new TextField();
     lblMon.setText("Current Money: " + Double.toString(money));
+    
+    //Creates buttons that will allow the user to properly play the game
     Button btnSubmit = new Button("Submit Bet");
     Button btnHit = new Button("Hit me");
     Button btnFreeze = new Button("Freeze");
     
     Button btnRestart = new Button("Restart");
     btnRestart.setVisible(false);
-    //btnRestart.setLayoutX(195);
     btnRestart.setLayoutY(HEIGHT-90);
     btnRestart.setPrefWidth((WIDTH/2) - 0.25);
     btnRestart.setPrefHeight(90);
@@ -366,7 +373,7 @@ public class blackJackGame {
     btnGOQuit.setLayoutY(HEIGHT-90);
     btnGOQuit.setPrefWidth((WIDTH/2) - 0.25);
     btnGOQuit.setPrefHeight(90);
-    
+    //Create a game over label, and set it up
     Label lblGameOver = new Label("Uh oh! It appears you are out of funds. Play again?"); 
     lblGameOver.setFont(Helvetica);
     lblGameOver.setTextFill(Color.YELLOW);
@@ -374,14 +381,15 @@ public class blackJackGame {
     lblGameOver.setLayoutY(HEIGHT-140);
     lblGameOver.setVisible(false);
     
-    
+    //Have a label welcoming the user
     lblWelcome.setText("Welcome " +userName + "!");
     lblWelcome.setFont(Helvetica);
     lblWelcome.setTextFill(Color.YELLOW);
     
+    //All labels are Helvetica font, and yellow
     lblMon.setFont(Helvetica);
-    lblMon.setTextFill(Color.YELLOW);        //Color.LIGHTCYAN       Color.TURQUOISE
-    lblBetP.setFont(Helvetica);                 //CYAN AND TURQUOISE
+    lblMon.setTextFill(Color.YELLOW);   
+    lblBetP.setFont(Helvetica);         
     lblBetP.setTextFill(Color.YELLOW);
     lblCurrentBet.setFont(Helvetica);
     lblCurrentBet.setTextFill(Color.YELLOW);
@@ -408,25 +416,40 @@ public class blackJackGame {
     btnHit.setVisible(false);
     btnFreeze.setVisible(false);
 
+    //Add everything to the pane
     thePane.getChildren().addAll(lblWelcome, lblMon,lblCurrentBet,lblBetP,txtBet,btnSubmit, btnHit, 
             btnFreeze, btnRestart, btnGOQuit, lblGameOver, lblWinnerMe, lblWinnerEnemy, lblmyScore, lblenemyScore);
 
+    //When the submit button is clicked
     btnSubmit.setOnAction(e->{
+      //if it is not the users first time playing
       if(firstPlay !=true){
+          //reset the card position
         resetCardPosition(HEIGHT-120, 30);
         resetCards();
       }
+      //Set the text of labels
       lblmyScore.setText("0");
       lblWinnerMe.setText("Winner!");
       lblWinnerEnemy.setText("Winner!");
+      
+      //Set the visibility of labels
       lblWinnerMe.setVisible(false);
       lblWinnerEnemy.setVisible(false);
       lblmyScore.setVisible(false);
       lblenemyScore.setVisible(false);
+      
+      //Now indicate that it is no longer the first time play of the user
       firstPlay = false;
+      //Counters for how many cards the user/enemy has in their hand
       howManyCards = 0;
       howManyEnemyCards = 12;
+      
+      //Gets the text from the textField, and uses it as the bet value
       currentBet = Double.parseDouble(txtBet.getText());
+      
+      //Error checking for bet, ensures that it is a proper amount
+      //If it is not a proper amount, inform the user
       if(currentBet <=0){
         txtBet.setText("Bet must be over 0$.");
       }
@@ -434,14 +457,23 @@ public class blackJackGame {
         txtBet.setText("Not enough funds.");
       }
       else{
+        //If the bet is a proper amount, continue on.
+        //Set the score of the user and the enemy to 0
         score = 0;
         enemyScore = 0;
+        
+        //Hide submit (because a game is underway), lbl's prompting the user
+        //And other nodes
         btnSubmit.setVisible(false);
         lblBetP.setVisible(false);
         txtBet.setVisible(false);
         btnHit.setVisible(true);
         btnFreeze.setVisible(true);
+        
+        //Reduces the users money to be their old money minus the bet they placed
         money = money - currentBet;
+        
+        //Change the labels to show the updated bet/money
         lblMon.setText("Current Money: "+ Double.toString(money));
         lblCurrentBet.setText("Current Bet: " + Double.toString(currentBet));
       }
@@ -449,14 +481,18 @@ public class blackJackGame {
 
 
     btnHit.setOnAction(e -> {
+      //When the user presses the hit button (get another card)
       int chosenCard;
       while(true){
+        //Find a card for the user that isn't already taken
         chosenCard = getRandomNumber();
         if (cards[chosenCard] == 0){
           cards[chosenCard] = 1;
           cardsUsed+=1;
           if(cardsUsed==52){
+            //If all cards are used
             for(int j =0; j<52; j++){
+              //reshuffle the deck
               cards[j] = 0;
             }
             cardsUsed =0;
@@ -464,13 +500,20 @@ public class blackJackGame {
           break;
         }
       }
+      //Add the value of the card to the users score/hand
       score += cardValue[chosenCard];
+      //Show the card to the user
       view[howManyCards].setImage(deck.get(chosenCard));
+      //Increase the amount of cards the user has by 1
       howManyCards+=1;
+      //Update the label that informs the user their current score
       lblmyScore.setVisible(true);
       lblmyScore.setLayoutY(HEIGHT-165);
       lblmyScore.setText(score+"");  
+      
+      //If the user busts
       if(score >21){
+        //Inform the user they are out, and prevent them from taking more cards
         System.out.println("You bust! Please Freeze.");
         btnHit.setVisible(false);
         lblmyScore.setText(score+" (You bust! Please Freeze.)");
@@ -479,11 +522,14 @@ public class blackJackGame {
       //Enemy must play on anything under 16.
       if (enemyScore < 16){
         while(true){
+          //Get the card for the enemy
           chosenCard = getRandomNumber();
           if (cards[chosenCard] == 0){
             cards[chosenCard] = 1;
             cardsUsed+=1;
+            //If all cards are used
             if(cardsUsed==52){
+              //reshuffle the deck
               for(int j =0; j<52; j++){
                 cards[j] = 0;
               }
@@ -493,17 +539,19 @@ public class blackJackGame {
             break;
           }
         }
+        //Update the enemy score, remove the card from the deck
         System.out.println("Enemy got: " + cardValue[chosenCard]);
         enemyScore += cardValue[chosenCard];
         view[howManyEnemyCards].setImage(deck.get(chosenCard));
         if(howManyEnemyCards-12 >0){
+          //Only show the user the enemys first card, hide the other cards they have
           System.out.println(howManyEnemyCards-12);
           censoredCards[howManyEnemyCards-12].setVisible(true);
           censoredCards[howManyEnemyCards-12].toFront();
         }
         howManyEnemyCards+=1;
       }
-
+      //Update card count
       System.out.println(score);
       howManyCards+=1;
 
@@ -511,6 +559,7 @@ public class blackJackGame {
     });
 
     btnFreeze.setOnAction(e -> {
+      //When the user presses the freeze button
       System.out.println("Froze on score: " + score);
       btnHit.setVisible(false);
       btnFreeze.setVisible(false);
@@ -519,21 +568,26 @@ public class blackJackGame {
       txtBet.setVisible(true);
       int chosenCard;
       if (enemyScore < 16){
+        //If the enemy has under 16, they must keep playing
         while(true){
+          //Find a card for the enemy
           chosenCard = getRandomNumber();
           if (cards[chosenCard] == 0){
             cards[chosenCard] = 1;
             cardsUsed+=1;
             if(cardsUsed==52){
+              //If all cards are used, reshuffle the deck
               for(int j =0; j<52; j++){
                 cards[j] = 0;
               }
               cardsUsed =0;
             }
+            //Update the enemy score
             System.out.println("Enemy got: " + cardValue[chosenCard]);
             enemyScore += cardValue[chosenCard];
             view[howManyEnemyCards].setImage(deck.get(chosenCard));
             if(howManyEnemyCards-12 >0){
+              //Censor all cards except the enemys first one
               System.out.println(howManyEnemyCards-12);
               censoredCards[howManyEnemyCards-12].setVisible(true);
               censoredCards[howManyEnemyCards-12].toFront();
@@ -546,7 +600,7 @@ public class blackJackGame {
         }
 
       }
-      //runThread(score, enemyScore, thePane);
+      
       //Print to console users score, and the enemys score
       System.out.println("Your score was: " + score);
       System.out.println("Enemy score was: " + enemyScore);
@@ -571,6 +625,7 @@ public class blackJackGame {
           lblWinnerMe.setVisible(true);
           lblWinnerEnemy.setVisible(true);
           if(money == 0){
+            //If the user bet all their money, allow them to reset, or allow them to quit.
             btnRestart.setVisible(true);
             btnGOQuit.setVisible(true);
             lblGameOver.setVisible(true);
@@ -578,6 +633,7 @@ public class blackJackGame {
             txtBet.setVisible(false);
             lblBetP.setVisible(false);
             btnRestart.setOnAction(f -> {
+                //If they choose reset, call gameOver function, and alter visability
                 gameOver();
                 btnRestart.setVisible(false);
                 btnGOQuit.setVisible(false);
@@ -590,8 +646,10 @@ public class blackJackGame {
             });
             
             btnGOQuit.setOnAction(g -> {
+                //If they quit, bring up the exit window
                 closeEverything = exitWindow.callExit();
                 if (closeEverything != 2){
+                    //Stop the audio, and close the game
                     mediaPlayer.stop();
                     window.close();
                 }
@@ -601,6 +659,7 @@ public class blackJackGame {
       }
 
       else if (enemyScore > 21){
+        //If enemy busts, you win
         System.out.println("You win!");
         money +=currentBet*2;
           lblWinnerMe.setText("Winner!");
@@ -609,7 +668,7 @@ public class blackJackGame {
       }
 
       else if(score > enemyScore){
-        //You win a profit!
+        //If your score was higher than the enemys, you win
         System.out.println("You win!");
         money += currentBet*2;
         lblWinnerMe.setText("Winner!");
@@ -617,6 +676,7 @@ public class blackJackGame {
          
       }
       else if (score == enemyScore){
+        //If you and the enemy have the same score
         System.out.println("Tie.");
         //Get your money back
         money += currentBet;
@@ -626,12 +686,14 @@ public class blackJackGame {
         lblWinnerEnemy.setVisible(true);
       }
       else{
+        //You lose if you did not meet any other conditions
         System.out.println("You lose.");
         lblWinnerMe.setText("You lose.");
         lblWinnerEnemy.setText("Winner!");
         lblWinnerMe.setVisible(true);
         lblWinnerEnemy.setVisible(true);
         if(money == 0){
+            //If the user uses all of their money, allow them to reset or quit
             btnRestart.setVisible(true);
             btnGOQuit.setVisible(true);
             lblGameOver.setVisible(true);
@@ -639,7 +701,7 @@ public class blackJackGame {
             txtBet.setVisible(false);
             lblBetP.setVisible(false);
             btnRestart.setOnAction(f -> {
-                //Client client = new Client("127.0.0.1", 5000, "Blackjack " + userName+ " " +highestMoney);
+                //If they choose reset, call gameOver function and alter visibilty
                 gameOver();
                 btnRestart.setVisible(false);
                 btnGOQuit.setVisible(false);
@@ -651,8 +713,10 @@ public class blackJackGame {
                 lblCurrentBet.setText("Current Bet: 0.0" );
             });
             btnGOQuit.setOnAction(g -> {
+                //If they quit the game, bring up the exit menu
                 closeEverything = exitWindow.callExit();
                 if (closeEverything != 2){
+                    //End the music, and close the window
                     mediaPlayer.stop();
                     window.close();
                 }
@@ -762,7 +826,6 @@ public class blackJackGame {
   public static void gameOver(){
       //Reset user to have their old money value
       money = 100;
-      //potential loss counter
   }
 
 
