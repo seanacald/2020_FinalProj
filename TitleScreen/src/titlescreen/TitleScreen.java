@@ -88,6 +88,7 @@ public class TitleScreen extends Application {
             primaryStage.hide();
             doIStay = blackJackGame.display();
             if(doIStay == 0){
+                theThread.stop();
                 primaryStage.close();
             }
             else{
@@ -96,7 +97,16 @@ public class TitleScreen extends Application {
             
         });
         
-        Button btnGame2 = new Button("Game2");
+        Button btnGame2 = new Button("24");
+        
+        btnGame2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                primaryStage.hide();
+                titlescreen.Game4_24.display();
+            }
+        });
+        
         Button btnGame3 = new Button("Game3");
 
         btnBlackJack.setLayoutX(20);
@@ -105,7 +115,7 @@ public class TitleScreen extends Application {
         
         
         Pane root = new Pane();
-        root.getChildren().addAll(/*menuBar, */btnBlackJack, titleLabel);
+        root.getChildren().addAll(/*menuBar, */btnBlackJack, btnGame2, titleLabel);
         
         Scene scene = new Scene(root, 300, 250);
         

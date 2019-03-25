@@ -44,8 +44,8 @@ public class blackJackRules {
         Label lblRule4 = new Label("4. However, if the card you pull from the deck is plus your current total is greater than 21, you automatically lose.");
         Label lblRule5 = new Label("5. Each card has a specific value.");
         Label lblRule51 = new Label("5.1. Non-face cards are worth whatever number they are.");
-        Label lblRule52 = new Label("5.2. Face cards are worth 10;");
-        Label lblRule53 = new Label("5.3. Ace is either worth 1 or 11;");
+        Label lblRule52 = new Label("5.2. Face cards are worth 10.");
+        Label lblRule53 = new Label("5.3. Ace is worth 1.");
         Label lblRule54 = new Label("5.4. Jokers are not included.");
         Label lblRule6 = new Label("6. Once a card has been pulled, it cannot be pulled again until the deck runs out of cards, and it needs to be reshuffled.");
         Label lblRule7 = new Label("7. You can bet however much money you like. Each time you win, you double your money. But once you are out of money, it's game over!");
