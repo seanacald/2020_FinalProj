@@ -39,7 +39,7 @@ public class HangMan extends Application{
 
 
   //for displaying guessed letters
-  private Label guessedLetters = new Label("");
+  //private Label guessedLetters = new Label("");
 
 
   public static int main(String args[]){
@@ -49,6 +49,116 @@ public class HangMan extends Application{
 
   @Override
   public void start(Stage primaryStage){
+
+    //makes the gridpane for the title screen
+    Pane titlePane = new Pane();
+
+
+    //send theBackgroundView to be behind the nodes
+
+    //Defines an image
+    ImageView backGround = new ImageView(new Image("images//chalkboard.jpg"));
+    backGround.setX(0.0f);
+    backGround.setY(0.0f);
+    backGround.toBack();
+
+
+    //the title
+    Label title = new Label("Hang Man");
+    Font font = Font.font("Marker Felt", 60);
+    title.setFont(font);
+    title.setTextFill(Color.WHITE);
+    title.setLayoutX(275.0f);
+    title.setLayoutY(150.0f);
+
+
+    //the button that commences the game
+    Button btStart = new Button("Start");
+    font = Font.font("Marker Felt", 30);
+    btStart.setFont(font);
+    btStart.setLayoutX(345.0f);
+    btStart.setLayoutY(300.0f);
+
+
+    //proceeds to the next scene once the button is pressed
+    btStart.setOnAction((e) -> {
+      categoryScene(primaryStage);
+    });
+
+
+    titlePane.getChildren().addAll(backGround, title,btStart);
+    Scene scene = new Scene(titlePane, 800, 548);
+
+
+    primaryStage.setTitle("Hang Man"); // Set the stage title
+    primaryStage.setScene(scene); // Place the scene in the stage
+    primaryStage.show(); // Display the stage
+  }
+
+
+
+  //builds the scene to pick a category
+  protected static void categoryScene(Stage primaryStage){
+
+    Pane categoryPane = new Pane();
+
+    //sets the background to a chalkboard
+    ImageView backGround = new ImageView(new Image("images//chalkboard.jpg"));
+    backGround.setX(0.0f);
+    backGround.setY(0.0f);
+    backGround.toBack();
+
+    //sets the big letters
+    Label categoryTitle = new Label("Pick A Word Category");
+    Font font = Font.font("Marker Felt", 60);
+    categoryTitle.setFont(font);
+    categoryTitle.setTextFill(Color.WHITE);
+    categoryTitle.setLayoutX(150.0f);
+    categoryTitle.setLayoutY(150.0f);
+
+
+    //makes the buttons
+    Button btAnimal = new Button("Animals");
+    font = Font.font("Marker Felt", 25);
+    btAnimal.setFont(font);
+    btAnimal.setLayoutX(180.0f);
+    btAnimal.setLayoutY(300.0f);
+
+    Button btCountries = new Button("Countries");
+    font = Font.font("Marker Felt", 25);
+    btCountries.setFont(font);
+    btCountries.setLayoutX(345.0f);
+    btCountries.setLayoutY(300.0f);
+
+    Button btFood = new Button("Food");
+    font = Font.font("Marker Felt", 25);
+    btFood.setFont(font);
+    btFood.setLayoutX(530.0f);
+    btFood.setLayoutY(300.0f);
+
+
+    btAnimal.setOnAction((e) ->{
+      mainStage(primaryStage, "animals");
+    });
+    btCountries.setOnAction((e) ->{
+      mainStage(primaryStage, "countries");
+    });
+    btFood.setOnAction((e) ->{
+      mainStage(primaryStage, "food");
+    });
+
+    categoryPane.getChildren().addAll(backGround, categoryTitle, btAnimal, btCountries, btFood);
+
+    Scene scene = new Scene(categoryPane, 800, 548);
+
+
+    primaryStage.setTitle("Hang Man"); // Set the stage title
+    primaryStage.setScene(scene); // Place the scene in the stage
+    primaryStage.show(); // Display the stage
+  }
+
+  protected static void mainStage(Stage primaryStage, String categoryName){
+
 
     /*
     Borderpane for the entire screen that holds everything in it
@@ -61,9 +171,6 @@ public class HangMan extends Application{
     Right:
     a label that tells the category
     a label that has the word that is being guessed
-    Left:
-
-    top:
     */
     BorderPane whole = new BorderPane();
 
@@ -71,41 +178,59 @@ public class HangMan extends Application{
     //CentrePane buidling
     //Holds the stick figure drawing
     Pane figurePane = new Pane();
+    figurePane.setPrefWidth(500);
+    figurePane.setPrefHeight(548);
 
     //makes the stick figure in figurePane then makes it invisible until needed
     makeFigure(figurePane);
+
 
     /*
     gridpane for the bottom of the borderpane
     holds: the make a guess label and text field, guessed letters label and
     text field, button for guessing
     */
-    GridPane guessPane = new GridPane();
+    Pane guessPane = new Pane();
+    Font font = Font.font("Marker Felt", 20);
 
 
     //Bottom of the Borderpane building
 
     //the label for the letter guess
     Label guessLabel = new Label("Guess a letter: ");
-    guessPane.setConstraints(guessLabel, 0, 0);
+    guessLabel.setFont(font);
+    guessLabel.setLayoutX(10.0f);
+    guessLabel.setLayoutY(30.0f);
+
+    ImageView deskBackGround = new ImageView(new Image("images//desk.jpg"));
+
 
     //for guessing a letter
     TextField guessALetter = new TextField();
-    guessPane.setConstraints(guessALetter, 1, 0);
+    guessALetter.setFont(font);
+    guessALetter.setLayoutX(150.0f);
+    guessALetter.setLayoutY(20.0f);
 
     //the letters that have been guessed label
     Label guessedLettersLabel = new Label("Guessed Letters: ");
-    guessPane.setConstraints(guessedLettersLabel, 3, 0);
+    guessedLettersLabel.setFont(font);
+    guessedLettersLabel.setLayoutX(450.0f);
+    guessedLettersLabel.setLayoutY(30.0f);
 
     //the letters that have been guessed
-    guessPane.setConstraints(guessedLetters, 4, 0);
+    Label guessedLetters = new Label("");
+    guessedLetters.setFont(font);
+    guessedLetters.setLayoutX(600.0f);
+    guessedLetters.setLayoutY(20.0f);
 
     //the button for making a guess
     Button btGuess = new Button("Make a Guess!");
-    guessPane.setConstraints(btGuess, 2,1);
+    btGuess.setFont(font);
+    btGuess.setLayoutX(350.0f);
+    btGuess.setLayoutY(150.0f);
 
 
-    guessPane.getChildren().addAll(guessLabel, guessALetter, guessedLettersLabel, guessedLetters, btGuess);
+    guessPane.getChildren().addAll(deskBackGround, guessLabel, guessALetter, guessedLettersLabel, guessedLetters, btGuess);
 
 
 
@@ -114,10 +239,12 @@ public class HangMan extends Application{
 
     //Right of the BorderPane Building
 
-    GridPane rightPane = new GridPane();
+    Pane rightPane = new Pane();
+    rightPane.setPrefWidth(300);
+    rightPane.setPrefHeight(548);
 
     //calling the function to choose a word from the specific category
-    String category = "animals";
+    String category = categoryName;
     String mysteryWord = chooseWord(category);
 
 
@@ -126,32 +253,32 @@ public class HangMan extends Application{
 
     //Says what category the current word is from
     //makes the font BIG
-    Font font = Font.font("Arial", 30);
+    font = Font.font("Marker Felt", 50);
     Label categoryLabel = new Label(category);
     categoryLabel.setFont(font);
-    rightPane.setConstraints(categoryLabel, 0, 0);
+    categoryLabel.setTextFill(Color.WHITE);
+    categoryLabel.setLayoutX(0.0f);
+    categoryLabel.setLayoutY(10.0f);
+
 
     //label for the word to be guessed
-    Label guessWordLabel = new Label("The Word: ");
-    rightPane.setConstraints(guessWordLabel, 0, 2);
+    //Label guessWordLabel = new Label("The Word: ");
+    //rightPane.setConstraints(guessWordLabel, 0, 2);
 
     //label where the word is solved
     //build display makes the blank form of the word
     Label wordToGuess = new Label(buildDisplay(mysteryWord));
-    font = Font.font("Arial", 20);
+    font = Font.font("Marker Felt", 40);
     wordToGuess.setFont(font);
+    wordToGuess.setTextFill(Color.WHITE);
+    wordToGuess.setLayoutX(0.0f);
+    wordToGuess.setLayoutY(100.0f);
 
-    rightPane.setConstraints(wordToGuess, 1, 2);
 
-    //grid.setHgap(10); //horizontal gap in pixels => that's what you are asking for
-    //grid.setVgap(10); //vertical gap in pixels
-    //grid.setPadding(new Insets(10, 10, 10, 10));
 
-    rightPane.setHgap(5);
-    rightPane.setVgap(50);
-    rightPane.setPadding(new Insets(10,10,10,10));
+    //rightPane.getChildren().addAll(categoryLabel, guessWordLabel, wordToGuess);
+    rightPane.getChildren().addAll(categoryLabel, wordToGuess);
 
-    rightPane.getChildren().addAll(categoryLabel, guessWordLabel, wordToGuess);
 
 
 
@@ -214,6 +341,7 @@ public class HangMan extends Application{
       if(isLost(figurePane)){
         System.out.println("You lose!");
       }
+      guessALetter.clear();
     });
 
     //if the player guesses the wrong word
@@ -233,6 +361,9 @@ public class HangMan extends Application{
     primaryStage.setScene(scene); // Place the scene in the stage
     primaryStage.show(); // Display the stage
 
+
+
+
   }
 
 
@@ -240,67 +371,18 @@ public class HangMan extends Application{
   //takes in the middle pane
   protected static void makeFigure(Pane pane){
 
-    //make the gallows
-
-    //using images
-
-    ImageView gallows = new ImageView(new Image("images/gallows.jpg"));
-    gallows.setX(0);
-    gallows.setY(0);
-    gallows.toBack();
-
-
-    ImageView head = new ImageView(new Image("images/head.png"));
-    head.setX(400);
-    head.setY(400);
-    head.toBack();
-
-
-
-
-    //using javafx
-
-    /*
-
-    Line base = new Line();
-    Line height = new Line();
-    Line topPart = new Line();
-    Line noose = new Line();
-
-    //make the noose part
-    noose.setStartX(headX);
-    noose.setStartY(200.0f);
-    noose.setEndX(headX);
-    noose.setEndY(150.0f);
-
-    //make the top part
-    topPart.setStartX(headX);
-    topPart.setStartY(150.0f);
-    topPart.setEndX(headX-200.0f);
-    topPart.setEndY(150.0f);
-
-    //make the big long part
-    height.setStartX(headX-200.0f);
-    height.setStartY(150.0f);
-    height.setEndX(headX-200.0f);
-    height.setEndY(600.0f);
-
-    //make the base part
-    base.setStartX(headX-350.0f);
-    base.setStartY(600.0f);
-    base.setEndX(headX-50.0f);
-    base.setEndY(600.0f);
-
-    base, height, topPart, noose
-    */
-
-
     //Make a head, left and right arm and left and right leg
     //head = circle
     //everything else is a line
 
+    //sets the background to a chalkboard
+    ImageView backGround = new ImageView(new Image("images//chalkboard.jpg"));
+    backGround.setX(0.0f);
+    backGround.setY(0.0f);
+    backGround.toBack();
 
     //Circle head = new Circle();
+    Circle head = new Circle();
     Line body = new Line();
     Line rArm = new Line();
     Line lArm = new Line();
@@ -309,34 +391,45 @@ public class HangMan extends Application{
 
     //place them
     //head
-    float headX = 400.0f;
-    float headY = 250.0f;
+    float headX = 300.0f;
+    float headY = 150.0f;
 
-  /*
+
     head.setCenterX(headX);
     head.setCenterY(headY);
     head.setRadius(50.0f);
     head.setFill(Color.TRANSPARENT);
-    head.setStroke(Color.BLACK);
+    head.setStroke(Color.WHITE);
+    head.setStrokeWidth(5);
+
 
     headY = headY + 50.0f;
-    */
+
     // body and arms
     rArm.setStartX(headX);
     rArm.setStartY(headY+75.0f);
     rArm.setEndX(headX + 100.0f);
     rArm.setEndY(headY+75.0f);
+    rArm.setStroke(Color.WHITE);
+    rArm.setStrokeWidth(5);
+
 
     lArm.setStartX(headX-100.0f);
     lArm.setStartY(headY+75.0f);
     lArm.setEndX(headX);
     lArm.setEndY(headY+75.0f);
+    lArm.setStroke(Color.WHITE);
+    lArm.setStrokeWidth(5);
+
 
     headY = headY - 50.0f;
     body.setStartX(headX);
     body.setStartY(headY+50.0f);
     body.setEndX(headX);
     body.setEndY(headY+200.0f);
+    body.setStroke(Color.WHITE);
+    body.setStrokeWidth(5);
+
 
     headY = headY+200.0f;
 
@@ -344,11 +437,17 @@ public class HangMan extends Application{
     rLeg.setStartY(headY);
     rLeg.setEndX(headX+100.0f);
     rLeg.setEndY(headY+100.0f);
+    rLeg.setStroke(Color.WHITE);
+    rLeg.setStrokeWidth(5);
+
 
     lLeg.setStartX(headX);
     lLeg.setStartY(headY);
     lLeg.setEndX(headX-100.0f);
     lLeg.setEndY(headY+100.0f);
+    lLeg.setStroke(Color.WHITE);
+    lLeg.setStrokeWidth(5);
+
 
 
 
@@ -364,9 +463,54 @@ public class HangMan extends Application{
 
 
 
+    //make the gallows
+
+
+
+    Line base = new Line();
+    Line height = new Line();
+    Line topPart = new Line();
+    Line noose = new Line();
+
+    //make the noose part
+    noose.setStartX(headX);
+    noose.setStartY(100.0f);
+    noose.setEndX(headX);
+    noose.setEndY(50.0f);
+    noose.setStroke(Color.WHITE);
+    noose.setStrokeWidth(5);
+
+
+    //make the top part
+    topPart.setStartX(headX);
+    topPart.setStartY(50.0f);
+    topPart.setEndX(headX-200.0f);
+    topPart.setEndY(50.0f);
+    topPart.setStroke(Color.WHITE);
+    topPart.setStrokeWidth(5);
+
+    //make the big long part
+    height.setStartX(headX-200.0f);
+    height.setStartY(50.0f);
+    height.setEndX(headX-200.0f);
+    height.setEndY(400.0f);
+    height.setStroke(Color.WHITE);
+    height.setStrokeWidth(5);
+
+
+    //make the base part
+    base.setStartX(headX-250.0f);
+    base.setStartY(400.0f);
+    base.setEndX(headX-150.0f);
+    base.setEndY(400.0f);
+    base.setStroke(Color.WHITE );
+    base.setStrokeWidth(5);
+
+
 
     //put everything in the pane
-    pane.getChildren().addAll(head, body, rArm, lArm, rLeg, lLeg, gallows);
+    pane.getChildren().addAll(backGround, head, body, rArm, lArm, rLeg, lLeg, base, height, topPart, noose
+    );
     return;
   }
 
@@ -396,7 +540,7 @@ public class HangMan extends Application{
   //if the stickman is complete and another guess is wrong you lose
   protected static void guessedWrong(Pane pane){
 
-    for(int i = 0; i <= 5; ++i){
+    for(int i = 1; i <= 6; ++i){
       if(!pane.getChildren().get(i).isVisible()){
         pane.getChildren().get(i).setVisible(true);
         return;
@@ -407,16 +551,12 @@ public class HangMan extends Application{
   //checks to see if the man is completed if so game is over
   protected static boolean isLost(Pane figurePane){
 
-    if(figurePane.getChildren().get(5).isVisible()){
+    if(figurePane.getChildren().get(6).isVisible()){
       return true;
     }
 
     return false;
   }
-
-
-
-
 
 
   //chooses a word from the seleceted category file using a Scanner

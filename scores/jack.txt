@@ -1,2 +1,2 @@
 Scores For Black Jack Game In Format:
-Player, 
+Player, player money

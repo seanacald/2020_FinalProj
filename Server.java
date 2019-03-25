@@ -34,7 +34,7 @@ public class Server
       try
       {
         line = in.readUTF();
-        System.out.println("The score was: " + line);
+      //  System.out.println("The score was: " + line);
         scoreData = line;
 
       }
