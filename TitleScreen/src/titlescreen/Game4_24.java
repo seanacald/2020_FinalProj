@@ -6,7 +6,6 @@
 package titlescreen;
 
 
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -17,7 +16,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import static javafx.scene.text.Font.font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 /**
