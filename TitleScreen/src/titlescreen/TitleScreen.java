@@ -104,24 +104,14 @@ public class TitleScreen extends Application {
         //New button for game 2 (24)
         Button find24 = new Button("Find 24");
         
-        find24.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                //Pause the thread
-                theThread.stop();
-                //Hides the main menu window
-                primaryStage.close();
-                //Starts 24
-                Game4_24.display();
-                            if(doIStay == 0){
-                theThread.stop();
-                primaryStage.close();
-            }
-            //If doIStay is not 0, reopen the menu
-            else{
-                primaryStage.show();
-            }
-            }
+        find24.setOnAction(e-> {
+            //Pause the thread
+            theThread.stop();
+            //Hides the main menu window
+            primaryStage.close();
+            //Starts 24
+            Game4_24.display();
+            
         });
         
         Button hangman = new Button("Hangman");
