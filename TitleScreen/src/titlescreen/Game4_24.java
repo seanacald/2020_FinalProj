@@ -230,20 +230,17 @@ public class Game4_24{
                     Label timeResult = new Label(game.getTotalTime()+" seconds taken");
                     Label pointResult = new Label(game.getScore()+" points obtained");
                     Label pointPerQ = new Label(game.getScore()/game.getSolve() +" points avg / question solved");
-                    Label x = new Label("Scores recorded");
                     //set label text settings
-                    x.setTextFill(Color.WHITE);
                     solveResult.setTextFill(Color.WHITE);
                     timeResult.setTextFill(Color.WHITE);
                     pointResult.setTextFill(Color.WHITE);
                     pointPerQ.setTextFill(Color.WHITE);
                     solveResult.setFont(Font.font("Arial",FontWeight.BOLD,20));
-                    x.setFont(Font.font("Arial",FontWeight.BOLD,20));
                     timeResult.setFont(Font.font("Arial",FontWeight.BOLD,20));
                     pointResult.setFont(Font.font("Arial",FontWeight.BOLD,20));
                     pointPerQ.setFont(Font.font("Arial",FontWeight.BOLD,20));
 
-                    n.getChildren().addAll(solveResult,timeResult,pointResult,pointPerQ,x);
+                    n.getChildren().addAll(solveResult,timeResult,pointResult,pointPerQ);
                     //SEAN USE BELOW CLIENT CODE
                     //Client client = new Client("127.0.0.1", 5000, "four "+line);
                     resultScene = new Scene(n,380,140);
@@ -263,7 +260,7 @@ public class Game4_24{
                 primaryStage.setScene(resultScene);
             }
         });
-        //ISAIAH ADD close -> main menu / exit
+        
         primaryStage.setTitle("24");
         primaryStage.setScene(scene);
         primaryStage.show();

@@ -113,6 +113,14 @@ public class TitleScreen extends Application {
                 primaryStage.close();
                 //Starts 24
                 Game4_24.display();
+                            if(doIStay == 0){
+                theThread.stop();
+                primaryStage.close();
+            }
+            //If doIStay is not 0, reopen the menu
+            else{
+                primaryStage.show();
+            }
             }
         });
         
