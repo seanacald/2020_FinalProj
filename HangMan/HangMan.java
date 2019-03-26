@@ -49,6 +49,7 @@ public class HangMan extends Application{
 
   @Override
   public void start(Stage primaryStage){
+    int wordsCompleted = 0;
 
     //makes the gridpane for the title screen
     Pane titlePane = new Pane();
@@ -82,7 +83,7 @@ public class HangMan extends Application{
 
     //proceeds to the next scene once the button is pressed
     btStart.setOnAction((e) -> {
-      categoryScene(primaryStage);
+      categoryScene(primaryStage, wordsCompleted);
     });
 
 
@@ -98,7 +99,8 @@ public class HangMan extends Application{
 
 
   //builds the scene to pick a category
-  protected static void categoryScene(Stage primaryStage){
+  protected static void categoryScene(Stage primaryStage, int words){
+    String wordsCompleted = Integer.toString(words);
 
     Pane categoryPane = new Pane();
 
@@ -115,6 +117,13 @@ public class HangMan extends Application{
     categoryTitle.setTextFill(Color.WHITE);
     categoryTitle.setLayoutX(150.0f);
     categoryTitle.setLayoutY(150.0f);
+
+    Label wordsCompletedLabel = new Label("You have completed: " + wordsCompleted + " word(s).");
+    font = Font.font("Marker Felt", 60);
+    wordsCompletedLabel.setFont(font);
+    wordsCompletedLabel.setTextFill(Color.WHITE);
+    wordsCompletedLabel.setLayoutX(50.0f);
+    wordsCompletedLabel.setLayoutY(400.0f);
 
 
     //makes the buttons
@@ -138,16 +147,16 @@ public class HangMan extends Application{
 
 
     btAnimal.setOnAction((e) ->{
-      mainStage(primaryStage, "animals");
+      mainStage(primaryStage, "animals", words);
     });
     btCountries.setOnAction((e) ->{
-      mainStage(primaryStage, "countries");
+      mainStage(primaryStage, "countries", words);
     });
     btFood.setOnAction((e) ->{
-      mainStage(primaryStage, "food");
+      mainStage(primaryStage, "food", words);
     });
 
-    categoryPane.getChildren().addAll(backGround, categoryTitle, btAnimal, btCountries, btFood);
+    categoryPane.getChildren().addAll(backGround, categoryTitle, wordsCompletedLabel, btAnimal, btCountries, btFood);
 
     Scene scene = new Scene(categoryPane, 800, 548);
 
@@ -157,14 +166,15 @@ public class HangMan extends Application{
     primaryStage.show(); // Display the stage
   }
 
-  protected static void mainStage(Stage primaryStage, String categoryName){
-
+  protected static void mainStage(Stage primaryStage, String categoryName, int words){
+    String wordsCompleted = Integer.toString(words);
 
     /*
     Borderpane for the entire screen that holds everything in it
     Borderpane breakdown:
     Centre:
     has the stick figure
+    and a label that shows how many words have been completed
     Bottom:
     has guessed words and make a guess button and text field
     right has the word and the category
@@ -186,7 +196,7 @@ public class HangMan extends Application{
 
 
     /*
-    gridpane for the bottom of the borderpane
+    Pane for bottom
     holds: the make a guess label and text field, guessed letters label and
     text field, button for guessing
     */
@@ -215,7 +225,7 @@ public class HangMan extends Application{
     Label guessedLettersLabel = new Label("Guessed Letters: ");
     guessedLettersLabel.setFont(font);
     guessedLettersLabel.setLayoutX(450.0f);
-    guessedLettersLabel.setLayoutY(30.0f);
+    guessedLettersLabel.setLayoutY(28.0f);
 
     //the letters that have been guessed
     Label guessedLetters = new Label("");
@@ -223,8 +233,13 @@ public class HangMan extends Application{
     guessedLetters.setLayoutX(600.0f);
     guessedLetters.setLayoutY(20.0f);
 
+
+
+
     //the button for making a guess
     Button btGuess = new Button("Make a Guess!");
+    font = Font.font("Marker Felt", 25);
+
     btGuess.setFont(font);
     btGuess.setLayoutX(350.0f);
     btGuess.setLayoutY(150.0f);
@@ -274,10 +289,17 @@ public class HangMan extends Application{
     wordToGuess.setLayoutX(0.0f);
     wordToGuess.setLayoutY(100.0f);
 
+    Label wordsCompletedLabel = new Label(wordsCompleted + " word(s)");
+    font = Font.font("Marker Felt", 30);
+    wordsCompletedLabel.setFont(font);
+    wordsCompletedLabel.setTextFill(Color.WHITE);
+    wordsCompletedLabel.setLayoutX(0.0f);
+    wordsCompletedLabel.setLayoutY(200.0f);
+
 
 
     //rightPane.getChildren().addAll(categoryLabel, guessWordLabel, wordToGuess);
-    rightPane.getChildren().addAll(categoryLabel, wordToGuess);
+    rightPane.getChildren().addAll(categoryLabel, wordToGuess, wordsCompletedLabel);
 
 
 
@@ -324,25 +346,20 @@ public class HangMan extends Application{
 
         }
 
-        //get the text from the guess TextField done
-        //check if its in the word done
-        //if it is add it to the word in all its positions
-        //if it isnt add a part to the stick figure
-        //both times add it to guessed letters
-
-
       }else{
 
 
       }
-      if(isWon(wordToGuess)){
-        System.out.println("You Win!");
-      }
-      if(isLost(figurePane)){
-        System.out.println("You lose!");
-      }
+      //checks if the game has been won yet
+      isWon(primaryStage, wordToGuess, words);
+
+      isLost(primaryStage, figurePane, words);
+
       guessALetter.clear();
     });
+
+
+
 
     //if the player guesses the wrong word
     //guessedWrong(figurePane);
@@ -362,10 +379,151 @@ public class HangMan extends Application{
     primaryStage.show(); // Display the stage
 
 
-
-
   }
 
+  protected static void winScreen(Stage primaryStage, int words){
+
+    String numberOfWords = Integer.toString(words);
+    Pane winPane = new Pane();
+    //Defines an image
+    ImageView backGround = new ImageView(new Image("images//chalkboard.jpg"));
+    backGround.setX(0.0f);
+    backGround.setY(0.0f);
+    backGround.toBack();
+
+    //add a label that shows the number of words wordscompleted
+    //add a button that takes you back to categories
+    //add a buttont that
+
+    //label for number of words
+    Label numberWordsLabel = new Label("You have completed " + numberOfWords + " word(s) in a row");
+    Font font = Font.font("Marker Felt", 40);
+    numberWordsLabel.setFont(font);
+    numberWordsLabel.setTextFill(Color.WHITE);
+    numberWordsLabel.setLayoutX(100.0f);
+    numberWordsLabel.setLayoutY(10.0f);
+
+
+    Label nameLabel= new Label("Enter Name");
+    font = Font.font("Marker Felt", 30);
+    numberWordsLabel.setFont(font);
+    numberWordsLabel.setTextFill(Color.WHITE);
+    numberWordsLabel.setLayoutX(150.0f);
+    numberWordsLabel.setLayoutY(200.0f);
+
+    TextField name = new TextField();
+    name.setFont(font);
+    name.setLayoutX(300.0f);
+    name.setLayoutY(200.0f);
+
+
+
+
+    font = Font.font("Marker Felt", 40);
+
+    //the button for playing again
+    Button btReplay = new Button("Play Again?");
+    btReplay.setFont(font);
+    btReplay.setLayoutX(150.0f);
+    btReplay.setLayoutY(350.0f);
+
+    //the button for submitting your score
+    Button btSubmit = new Button("Submit Score?");
+    btSubmit.setFont(font);
+    btSubmit.setLayoutX(375.0f);
+    btSubmit.setLayoutY(350.0f);
+
+
+    btReplay.setOnAction((e) ->{
+      categoryScene(primaryStage, words);
+    });
+    btSubmit.setOnAction((e) ->{
+      submitScore(primaryStage, numberOfWords, name.getText());
+    });
+
+
+    winPane.getChildren().addAll(backGround, numberWordsLabel, nameLabel, name, btReplay, btSubmit);
+
+
+    Scene scene = new Scene(winPane, 800, 548);
+
+    primaryStage.setTitle("Hang Man"); // Set the stage title
+    primaryStage.setScene(scene); // Place the scene in the stage
+    primaryStage.show(); // Display the stage
+  }
+
+
+  protected static void loseScreen(Stage primaryStage, int words){
+
+    String numberOfWords = Integer.toString(words);
+
+    Pane losePane = new Pane();
+
+    //Defines an image
+    ImageView backGround = new ImageView(new Image("images//chalkboard.jpg"));
+    backGround.setX(0.0f);
+    backGround.setY(0.0f);
+    backGround.toBack();
+
+    //add a label that shows the number of words wordscompleted
+    //add a button that takes you back to categories
+    //add a buttont that
+
+    //label for number of words
+    Label numberWordsLabel = new Label("You lost having completed " + numberOfWords + " word(s) in a row");
+    Font font = Font.font("Marker Felt", 40);
+    numberWordsLabel.setFont(font);
+    numberWordsLabel.setTextFill(Color.WHITE);
+    numberWordsLabel.setLayoutX(75.0f);
+    numberWordsLabel.setLayoutY(100.0f);
+
+
+    //the label and textfield for putting a name into the score
+    Label nameLabel= new Label("Enter Name");
+    font = Font.font("Marker Felt", 30);
+    numberWordsLabel.setFont(font);
+    numberWordsLabel.setTextFill(Color.WHITE);
+    numberWordsLabel.setLayoutX(200.0f);
+    numberWordsLabel.setLayoutY(200.0f);
+
+    TextField name = new TextField();
+    name.setFont(font);
+    name.setLayoutX(300.0f);
+    name.setLayoutY(200.0f);
+
+
+    font = Font.font("Marker Felt", 40);
+
+    //the button for playing again
+    Button btReplay = new Button("Play Again?");
+    btReplay.setFont(font);
+    btReplay.setLayoutX(100.0f);
+    btReplay.setLayoutY(275.0f);
+
+    //the button for submitting your score
+    Button btSubmit = new Button("Submit Score?");
+    btReplay.setFont(font);
+    btReplay.setLayoutX(350.0f);
+    btReplay.setLayoutY(275.0f);
+
+
+    btReplay.setOnAction((e) ->{
+      categoryScene(primaryStage, words);
+    });
+    btSubmit.setOnAction((e) ->{
+
+      //function that basically ends the game here
+      submitScore(primaryStage, numberOfWords, name.getText());
+    });
+
+
+    losePane.getChildren().addAll(backGround, numberWordsLabel, nameLabel, name, btReplay, btSubmit);
+    Scene scene = new Scene(losePane, 800, 548);
+
+    primaryStage.setTitle("Hang Man"); // Set the stage title
+    primaryStage.setScene(scene); // Place the scene in the stage
+    primaryStage.show(); // Display the stage
+  }
 
   //builds the stick figure that is in the game
   //takes in the middle pane
@@ -549,13 +707,13 @@ public class HangMan extends Application{
   }
 
   //checks to see if the man is completed if so game is over
-  protected static boolean isLost(Pane figurePane){
+  protected static void isLost(Stage primaryStage, Pane figurePane, int words){
 
     if(figurePane.getChildren().get(6).isVisible()){
-      return true;
+      loseScreen(primaryStage, words);
     }
 
-    return false;
+    return;
   }
 
 
@@ -683,16 +841,23 @@ public class HangMan extends Application{
   }
 
   //checks to see if the word has been completed if it has returns true
-  protected static boolean isWon(Label displayedWord){
+  protected static void isWon(Stage primaryStage, Label displayedWord, int words){
     String currentWord = displayedWord.getText();
 
     for(int i = 0; i < currentWord.length(); ++i){
       if(currentWord.charAt(i) == '_'){
-        return false;
+
+        return;
       }
     }
+    winScreen(primaryStage, words+1);
+  }
 
-    return true;
+
+  protected static void submitScore(Stage primaryStage, String words, String name){
+    words = name + " " +words;
+    SendData SendData = new SendData("127.0.0.1", 5000, "hang " + words);
+
   }
 
 }

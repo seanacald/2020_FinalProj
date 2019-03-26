@@ -1,27 +1,32 @@
-// A Java program for a Server
+// A Java program for a RecieveData
 import java.net.*;
 import java.io.*;
 
-public class Server
+public class RecieveData
 {
   //initialize socket and input stream
   private Socket          socket   = null;
-  private ServerSocket    server   = null;
+  private ServerSocket    Server   = null;
   private DataInputStream in       =  null;
 
-  // constructor with port
-  public Server(int port)
+
+  public static void main(String args[])
+  {
+    RecieveData RecieveData = new RecieveData(5000);
+  }
+
+  // constructor with port as an argument
+  //the constructor waits until it recieves a string of data from the SendData
+  //class before writing that data into a file determined by the first four
+  //letters of the string
+  public RecieveData(int port)
   {
     String scoreData = "";
-    // starts server and waits for a connection
+    // starts RecieveData and waits for a connection
     try
     {
-      server = new ServerSocket(port);
-      System.out.println("Server started");
-
-
-      socket = server.accept();
-      System.out.println("Client accepted");
+      Server = new ServerSocket(port);
+      socket = Server.accept();
 
       // takes input from the client socket
       in = new DataInputStream(
@@ -42,7 +47,6 @@ public class Server
       {
         System.out.println(i);
       }
-      System.out.println("Closing connection");
 
       // close connection
       socket.close();
@@ -55,14 +59,21 @@ public class Server
   try
   {
 
+    //the filename that the score data is written to is determined by
+    //the first four letters of the score data string
+    //Hang is hangman data in hang.txt
+    //four is 24 data in four.txt
+    //jack is blackjack data in jack.txt
+
     String fileName = "scores/" + scoreData.substring(0,4) + ".txt";
     String actualScoreData = scoreData.substring(5,scoreData.length());
     //takes the first 4 characters in the string as the file name, the rest of
     //the string is the score data
-    System.out.println(fileName);
 
 
-    //Set true for append mode
+
+    //Set true for appending to the text file instead of adding it to the line
+    //appends to the bototm
     FileWriter fileWriter = new FileWriter(fileName, true);
 
     // Create a printWriter that appends to the end of hte file
@@ -75,27 +86,10 @@ public class Server
     // Close the file
     output.close();
 
-
-
-
   }catch(IOException i){
     System.out.println(i);
   }
 
-
-
-
-
-
-
-
-
-
-
   }
 
-  public static void main(String args[])
-  {
-    Server server = new Server(5000);
-  }
 }

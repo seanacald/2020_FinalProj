@@ -1,25 +1,30 @@
-// A Java program for a Client
+// A Java program for a SendData
 import java.net.*;
 import java.io.*;
 
-public class Client
+public class SendData
 {
+
   // initialize socket and input output streams
   private Socket socket            = null;
   private DataInputStream  input   = null;
   private DataOutputStream out     = null;
 
 
-  // constructor to put ip address port and score
-  public Client(String address, int port, String score)
+
+    public static void main(String args[])
+    {
+      //SendData SendData = new SendData("127.0.0.1", 5000);
+    }
+
+  // constructor to put ip address and port
+  //the constructor also sends the data
+  public SendData(String address, int port, String score)
   {
     // make a connection
     try
     {
       socket = new Socket(address, port);
-      System.out.println("Connected");
-
-
       // sends output to the socket
       out = new DataOutputStream(socket.getOutputStream());
     }
@@ -34,7 +39,8 @@ public class Client
 
     try
     {
-
+      //sends the score to the server
+      //the score is passed as an argument to the SendData constructor
       out.writeUTF(score);
     }
     catch(IOException i)
@@ -54,10 +60,4 @@ public class Client
     }
   }
 
-
-
-  public static void main(String args[])
-  {
-    //Client client = new Client("127.0.0.1", 5000); 
-  }
 }
