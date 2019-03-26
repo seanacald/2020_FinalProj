@@ -32,16 +32,9 @@ public class TitleScreen extends Application {
     @Override
     public void start(Stage primaryStage) {
         
-        
-     
-        
         //New Label that will be used in the thread, will be constantly updated
         Label titleLabel = new Label("");
 
-        //Set location of the label
-
-        
-        
         //This thread is used as a title for the Arcade Menu, with 
         //The amount of "!"'s changing to show enthusiasm, and get the user
         //pumped up for the games
