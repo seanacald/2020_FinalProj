@@ -1,0 +1,12 @@
+#pane{
+    -fx-background-image: url("24background.jpg");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: 500 275;
+    -fx-background-position: center center;
+}
+#endpane1{
+    -fx-background-image: url("24background.jpg");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: 400 200;
+    -fx-background-position: center center;
+}
