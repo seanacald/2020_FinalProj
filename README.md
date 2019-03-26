@@ -1,19 +1,19 @@
 # Users contributions 
-Sean Caldwell, seanacald Branch = Sean :
+Sean Caldwell, seanacald Branch = Sean : <br />
 Created the HangMan class as well as all related art, The SendData and "RecieveData.java"
 classes and collaborated with Michael and Isaiah on the TitleScreen class UI.
 <br />
 <br />
 
 
-Isaiah von Uders, isaiahsgithub - branch: Isaiah
+Isaiah von Uders, isaiahsgithub - branch: Isaiah <br />
 I made the blackJackGame, exitWindow, blackJackRules. 
 blackJackGame is the main functionality of one of the Arcade Games - BlackJack.
 I also helped develop the Main Menu, and I made the Thread for the Title Screen.
 <br />
 <br />
 
-Michael van Dalen | MVDMVP (Branch = Ken)
+Michael van Dalen | MVDMVP (Branch = Ken)<br />
 I singlehandedly developed the find 24 game found within the project, as well
 as created the layout used in the selection menu.
 <br />
@@ -24,7 +24,7 @@ Repository URL: https://github.com/seanacald/2020_FinalProj
 <br />
 
 
-### Special Instructions and Guide to Compile
+## Special Instructions and Guide to Compile
 Special Instructions:
 To use the socket functionality, two terminals are necessary. One terminal needs
 to compile and run "RecieveData.java" and the other compiles and runs the program
