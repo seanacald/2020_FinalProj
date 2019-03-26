@@ -10,3 +10,39 @@
     -fx-background-size: 400 200;
     -fx-background-position: center center;
 }
+#openpane{
+    -fx-background-image: url("arcade.jpg");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: 800 700 ;
+    -fx-background-position: center center;
+}
+#blackjack{
+    -fx-background-image: url("cardRow.jpg");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: 475 150 ;
+    -fx-background-position: center center;
+}
+#blackjack .text{
+    -fx-stroke: green;
+    -fx-stroke-size: 10px;
+}
+#find24{
+    -fx-background-image: url("mathboard.jpg");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: 475 300 ;
+    -fx-background-position: center center;
+}
+#find24 .text{
+    -fx-stroke: green;
+    -fx-stroke-size: 10px;
+}
+#hangman{
+    -fx-background-image: url("hangManBackground.jpg");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: 500 150 ;
+    -fx-background-position: center center;
+}
+#hangman .text{
+    -fx-stroke: green;
+    -fx-stroke-size: 10px;
+}
