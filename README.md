@@ -50,3 +50,8 @@ Once that is finished, to run this file, right click anywhere on the code and se
 
 To view where the data from the socket is saved, navigate through to: "TitleScreen\src\titlescreen\scores". <br />
 If you would like to view the code individually, navigate through to: "TitleScreen\src\titlescreen", and select whichever .java file you'd like. <br />
+
+## Final Reminder
+To properly ensure the code is properly executed, click the Hammer and Broom icon (to the left of the Play Button), or 
+you can press SHIFT+F11. <br />
+
