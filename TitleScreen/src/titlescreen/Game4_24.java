@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package game.pkg4_24;
+package titlescreen;
 
 
 import javafx.application.Application;
@@ -28,55 +28,54 @@ import javafx.stage.Stage;
  * max score of 1000 if solved between 0 and 5 seconds, down to 100 by the time the 20 second mark is hit
  * not all sets of 4 numbers can create 24
  * each number can only be used once
- * 
- * 
+ *
+ *
  * Buttons:
  * 4 number buttons - 4 buttons with the current rotation of numbers
- * 4 
+ * 4
  */
-public class Game4_24 extends Application{
-    private boolean gameStarted = false; 
-    private boolean winStatus = false;
-    private Button b00;
-    private Button b01;
-    private Button b10;
-    private Button b11;
-    private Label score,data;
-    private Game game;
-    private Button reset,next,plus,minus,times,divide;
-    private Scene resultScene;
-    private Label info;
+public class Game4_24{
+    static boolean gameStarted = false;
+    static boolean winStatus = false;
+    static Button b00;
+    static Button b01;
+    static Button b10;
+    static Button b11;
+    static Label score,data;
+    static Game game;
+    static Button reset,next,plus,minus,times,divide;
+    static Scene resultScene;
+    static Label info;
 
-    @Override
-    public void start(Stage primaryStage) {
+    public static void display() {
         int operationSelected=-1;//addition = 0, subtraction = 1, multiplication = 2, division = 3
         game = new Game();
-        
+        Stage primaryStage = new Stage();
         //create number buttons and create an array of references to them
         b00 = new Button("PLEASE");
         b01 = new Button("TO START");
         b10 = new Button("PRESS Q");
         b11 = new Button("GAME!!!");
-        
+
         Button[] buttons = {b00,b01,b10,b11};
         //primary button setup
         for (Button button : buttons){
             button.setMinSize(100, 100);//sizing
             button.setMaxSize(100, 100);
             button.setDisable(true);//initially disable buttons
-            
+
             button.setOnAction(e->{//add click function
                 data.setText("");
 
                 if (gameStarted==true){
-                    
+
                     act(game,button);
                     score.setText("points: "+game.getScore());
                     if (game.getTurn()==false)
                         setInvis(buttons);
-                    
+
                     if (winStatus==false && game.getMove()==3)
-                        data.setText("not 24 :(");  
+                        data.setText("not 24 :(");
                     if (winStatus==true){
                         score.setText("points: "+game.getScore()+"\n q for next\n z to end");
                         data.setText("yay! 24 :)");
@@ -84,7 +83,7 @@ public class Game4_24 extends Application{
                 }
             });
         }
-        
+
         //reset button config
         reset = new Button("cls");
         reset.setMinSize(30, 30);
@@ -101,8 +100,8 @@ public class Game4_24 extends Application{
                 }
             }
         });
-        
-        
+
+
         //plus button config
         plus = new Button("+");
         plus.setOnAction(e->{
@@ -111,7 +110,7 @@ public class Game4_24 extends Application{
             }
         });
         plus.setMinSize(30, 30);
-        
+
         //minus button config
         minus = new Button("-");
         minus.setOnAction(e->{
@@ -120,7 +119,7 @@ public class Game4_24 extends Application{
             }
         });
         minus.setMinSize(30, 30);
-        
+
         //times button config
         times = new Button("*");
         times.setOnAction(e->{
@@ -129,7 +128,7 @@ public class Game4_24 extends Application{
             }
         });
         times.setMinSize(30, 30);
-        
+
         //div button config
         divide = new Button("÷");
         divide.setOnAction(e->{
@@ -139,8 +138,8 @@ public class Game4_24 extends Application{
         });
         divide.setMinSize(30, 30);
 
-        
-        //skip button config 
+
+        //skip button config
         next = new Button(">>>");
         next.setOnAction(e->{
             if (winStatus==false && gameStarted==true){
@@ -155,13 +154,13 @@ public class Game4_24 extends Application{
             }
         });
         next.setMinSize(30, 30);
-        
+
         //adds all function buttons to horizontal row
         HBox funcRow = new HBox();
         funcRow.getChildren().addAll(reset,plus,minus,times,divide,next);
         funcRow.setMargin(reset,new Insets(0,10,0,0));
         funcRow.setMargin(next, new Insets(0,0,0,10));
-        
+
         //create 4 number buttons and add to grid pane
         GridPane numPane = new GridPane();
         numPane.add(b00,0,0);
@@ -170,7 +169,7 @@ public class Game4_24 extends Application{
         numPane.add(b11,1,1);
         numPane.setHgap(30);
         numPane.setVgap(30);
-        
+
         VBox allButtons = new VBox(10);
         allButtons.getChildren().addAll(numPane,funcRow);//adds the number buttons, function button, esc, skip buttons
 
@@ -184,7 +183,7 @@ public class Game4_24 extends Application{
         data.setFont(Font.font("Arial",FontWeight.BOLD,20));
         info.setFont(Font.font("Arial",FontWeight.BOLD,14.5));
 
-        
+
         VBox labels = new VBox(15);
         labels.setMargin(data,new Insets(15,0,0,0));
         labels.getChildren().addAll(data,score,info);
@@ -193,8 +192,8 @@ public class Game4_24 extends Application{
         finalLayout.getChildren().addAll(allButtons,labels);
         finalLayout.setId("pane");
         Scene scene =  new Scene (finalLayout, 500,275);
-        scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
-        
+        scene.getStylesheets().addAll(Game4_24.class.getResource("style.css").toExternalForm());
+
         //key listener
         scene.setOnKeyPressed(e->{
             //q press when game hasnt started
@@ -245,7 +244,7 @@ public class Game4_24 extends Application{
                     timeResult.setFont(Font.font("Arial",FontWeight.BOLD,20));
                     pointResult.setFont(Font.font("Arial",FontWeight.BOLD,20));
                     pointPerQ.setFont(Font.font("Arial",FontWeight.BOLD,20));
-                    
+
                     n.getChildren().addAll(solveResult,timeResult,pointResult,pointPerQ,x);
                     //SEAN USE BELOW CLIENT CODE
                     //Client client = new Client("127.0.0.1", 5000, "four "+line);
@@ -258,11 +257,11 @@ public class Game4_24 extends Application{
                     out.setFont(Font.font("Arial",FontWeight.BOLD,20));
                     n.getChildren().add(out);
                     resultScene = new Scene(n,390,25);
-                    
+
                 }
                 //set scene to display results scene
                 n.setId("endpane1");
-                resultScene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+                resultScene.getStylesheets().addAll(Game4_24.class.getResource("style.css").toExternalForm());
                 primaryStage.setScene(resultScene);
             }
         });
@@ -272,14 +271,8 @@ public class Game4_24 extends Application{
         primaryStage.show();
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);   
-    }
     //perform operation based on selected buttons
-    public void act(Game game,Button button) {
+    public static void act(Game game,Button button) {
         //for setting up first term for operation
         if (game.getTurn()==false){//fresh
             game.setOp(-1);
@@ -295,7 +288,7 @@ public class Game4_24 extends Application{
             int op=game.getOp();
             double result=0;
             double i = game.getTerm1(),j=game.getTerm2();
-            
+
             //opperation ifs
             if (op==0) result = i+j;
             else if (op==1) result = i-j;
@@ -305,7 +298,7 @@ public class Game4_24 extends Application{
             button.setText(result+"");
             game.setTurn(false);
             game.nextMove();
-            
+
             //if 3 moves have been made and the result is 24, a solution has been found
             if (game.getMove()==3 && result==24){
                 winStatus=true;
@@ -316,18 +309,18 @@ public class Game4_24 extends Application{
                 b01.setDisable(true);
                 b10.setDisable(true);
                 b11.setDisable(true);
-            } 
+            }
         }
     }
     //generates a board of random numbers between 1 and 12
-    public void createBoard(Game game, Button[] buttons){
+    public static void createBoard(Game game, Button[] buttons){
         for (int i = 0 ; i<4 ; i++){
             game.setVal((double)(1+(int)(Math.random() * ((12 - 1) + 1))), i);
             buttons[i].setText(game.getVals()[i]+"");
         }
     }
     //sets disabled button (from turn selection) to invisible as well
-    public void setInvis(Button[] buttons){
+    public static void setInvis(Button[] buttons){
         for (Button button : buttons){
             if (button.isDisabled()){
                 button.setVisible(false);

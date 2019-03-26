@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package game.pkg4_24;
+package titlescreen;
 
 /**
  *
@@ -14,7 +14,7 @@ class Game {
     Game(){
         this.score=0;
     }
-    
+
     public int getScore(){
         return this.score;
     }
@@ -35,14 +35,14 @@ class Game {
     public void setSolve(int val){
         this.solveCount=val;
     }
-    
+
     public void setVal(double val,int loc){
         this.valList[loc]=val;
     }
     public double[] getVals(){
         return this.valList;
     }
-    
+
     public int getMove(){
         return this.moveCount;
     }
@@ -52,7 +52,7 @@ class Game {
     public void resetMove(){
         this.moveCount=0;
     }
-    
+
     public void setTurn(boolean val){
         this.buttonTurn = val;
     }
@@ -83,7 +83,7 @@ class Game {
     public double get11(){
         return this.valList[3];
     }
-    
+
 
     public void setOp(int val){
         this.operation=val;
@@ -113,7 +113,7 @@ class Game {
         this.endTime=System.nanoTime();
     }
     public double getTotalTime(){
-        return this.totalTime; 
+        return this.totalTime;
     }
     public void raise(){
         double time = (this.endTime-this.startTime)/1000000000;

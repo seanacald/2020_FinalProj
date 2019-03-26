@@ -107,15 +107,24 @@ public class TitleScreen extends Application {
         find24.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                //Pause the thread
+                theThread.stop();
                 //Hides the main menu window
-                primaryStage.hide();
+                primaryStage.close();
                 //Starts 24
-                //titlescreen.Game4_24.display();
+                Game4_24.display();
             }
         });
         
         Button hangman = new Button("Hangman");
-        
+        hangman.setOnAction(e-> {
+             //Pause the thread
+            theThread.stop();
+            //Hide the window for the menu
+            primaryStage.close();
+            HangMan.display();
+           
+        });
         
         titleLabel.setTextFill(Color.WHITE);
         titleLabel.setFont(Font.font("Elephant",FontWeight.BOLD,40));
