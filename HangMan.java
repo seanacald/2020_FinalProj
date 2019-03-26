@@ -88,7 +88,7 @@ public class HangMan extends Application{
 
 
     titlePane.getChildren().addAll(backGround, title,btStart);
-    Scene scene = new Scene(titlePane, 800, 549);
+    Scene scene = new Scene(titlePane, 800, 548);
 
 
     primaryStage.setTitle("Hang Man"); // Set the stage title
@@ -158,7 +158,7 @@ public class HangMan extends Application{
 
     categoryPane.getChildren().addAll(backGround, categoryTitle, wordsCompletedLabel, btAnimal, btCountries, btFood);
 
-    Scene scene = new Scene(categoryPane, 800, 549);
+    Scene scene = new Scene(categoryPane, 800, 548);
 
 
     primaryStage.setTitle("Hang Man"); // Set the stage title
@@ -189,7 +189,7 @@ public class HangMan extends Application{
     //Holds the stick figure drawing
     Pane figurePane = new Pane();
     figurePane.setPrefWidth(500);
-    figurePane.setPrefHeight(549);
+    figurePane.setPrefHeight(548);
 
     //makes the stick figure in figurePane then makes it invisible until needed
     makeFigure(figurePane);
@@ -232,9 +232,8 @@ public class HangMan extends Application{
     //the letters that have been guessed
     Label guessedLetters = new Label("");
     guessedLetters.setFont(font);
-    guessedLetters.setTextFill(Color.WHITE);
     guessedLetters.setLayoutX(600.0f);
-    guessedLetters.setLayoutY(25.0f);
+    guessedLetters.setLayoutY(20.0f);
 
 
 
@@ -259,7 +258,7 @@ public class HangMan extends Application{
 
     Pane rightPane = new Pane();
     rightPane.setPrefWidth(300);
-    rightPane.setPrefHeight(549);
+    rightPane.setPrefHeight(548);
 
     //calling the function to choose a word from the specific category
     String category = categoryName;
@@ -451,7 +450,7 @@ public class HangMan extends Application{
     winPane.getChildren().addAll(backGround, numberWordsLabel, nameLabel, name, btSubmit, btReplay);
 
 
-    Scene scene = new Scene(winPane, 800, 549);
+    Scene scene = new Scene(winPane, 800, 548);
 
     primaryStage.setTitle("Hang Man"); // Set the stage title
     primaryStage.setScene(scene); // Place the scene in the stage
@@ -525,7 +524,7 @@ public class HangMan extends Application{
 
 
     losePane.getChildren().addAll(backGround, numberWordsLabel, nameLabel, name, btReplay, btSubmit);
-    Scene scene = new Scene(losePane, 800, 549);
+    Scene scene = new Scene(losePane, 800, 548);
 
     primaryStage.setTitle("Hang Man"); // Set the stage title
     primaryStage.setScene(scene); // Place the scene in the stage
@@ -760,6 +759,7 @@ public class HangMan extends Application{
 
 
     //returns the word that has been picked
+    System.out.println(chosenWord);
     return chosenWord.toLowerCase();
   }
 
@@ -844,7 +844,6 @@ public class HangMan extends Application{
     }
 
     displayedWord.setText(updatedWord);
-    
 
   }
 
