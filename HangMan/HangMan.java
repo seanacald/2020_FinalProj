@@ -209,6 +209,7 @@ public class HangMan extends Application{
     //the label for the letter guess
     Label guessLabel = new Label("Guess a letter: ");
     guessLabel.setFont(font);
+    guessLabel.setTextFill(Color.WHITE);
     guessLabel.setLayoutX(10.0f);
     guessLabel.setLayoutY(30.0f);
 
@@ -224,6 +225,7 @@ public class HangMan extends Application{
     //the letters that have been guessed label
     Label guessedLettersLabel = new Label("Guessed Letters: ");
     guessedLettersLabel.setFont(font);
+    guessedLettersLabel.setTextFill(Color.WHITE);
     guessedLettersLabel.setLayoutX(450.0f);
     guessedLettersLabel.setLayoutY(28.0f);
 
@@ -241,7 +243,7 @@ public class HangMan extends Application{
     font = Font.font("Marker Felt", 25);
 
     btGuess.setFont(font);
-    btGuess.setLayoutX(350.0f);
+    btGuess.setLayoutX(320.0f);
     btGuess.setLayoutY(150.0f);
 
 
@@ -395,42 +397,45 @@ public class HangMan extends Application{
     //add a button that takes you back to categories
     //add a buttont that
 
+
     //label for number of words
     Label numberWordsLabel = new Label("You have completed " + numberOfWords + " word(s) in a row");
     Font font = Font.font("Marker Felt", 40);
     numberWordsLabel.setFont(font);
     numberWordsLabel.setTextFill(Color.WHITE);
     numberWordsLabel.setLayoutX(100.0f);
-    numberWordsLabel.setLayoutY(10.0f);
+    numberWordsLabel.setLayoutY(20.0f);
 
 
-    Label nameLabel= new Label("Enter Name");
+    Label nameLabel= new Label("Enter Name: ");
     font = Font.font("Marker Felt", 30);
-    numberWordsLabel.setFont(font);
-    numberWordsLabel.setTextFill(Color.WHITE);
-    numberWordsLabel.setLayoutX(150.0f);
-    numberWordsLabel.setLayoutY(200.0f);
+    nameLabel.setFont(font);
+    nameLabel.setTextFill(Color.WHITE);
+    nameLabel.setLayoutX(200.0f);
+    nameLabel.setLayoutY(200.0f);
+
 
     TextField name = new TextField();
+    font = Font.font("Marker Felt", 20);
     name.setFont(font);
-    name.setLayoutX(300.0f);
-    name.setLayoutY(200.0f);
+    name.setLayoutX(350.0f);
+    name.setLayoutY(202.0f);
 
 
 
 
-    font = Font.font("Marker Felt", 40);
+    font = Font.font("Marker Felt", 25);
 
     //the button for playing again
-    Button btReplay = new Button("Play Again?");
+    Button btReplay = new Button("Play More?");
     btReplay.setFont(font);
-    btReplay.setLayoutX(150.0f);
+    btReplay.setLayoutX(205.0f);
     btReplay.setLayoutY(350.0f);
 
     //the button for submitting your score
     Button btSubmit = new Button("Submit Score?");
     btSubmit.setFont(font);
-    btSubmit.setLayoutX(375.0f);
+    btSubmit.setLayoutX(430.0f);
     btSubmit.setLayoutY(350.0f);
 
 
@@ -442,7 +447,7 @@ public class HangMan extends Application{
     });
 
 
-    winPane.getChildren().addAll(backGround, numberWordsLabel, nameLabel, name, btReplay, btSubmit);
+    winPane.getChildren().addAll(backGround, numberWordsLabel, nameLabel, name, btSubmit, btReplay);
 
 
     Scene scene = new Scene(winPane, 800, 548);
@@ -474,41 +479,42 @@ public class HangMan extends Application{
     Font font = Font.font("Marker Felt", 40);
     numberWordsLabel.setFont(font);
     numberWordsLabel.setTextFill(Color.WHITE);
-    numberWordsLabel.setLayoutX(75.0f);
-    numberWordsLabel.setLayoutY(100.0f);
+    numberWordsLabel.setLayoutX(50.0f);
+    numberWordsLabel.setLayoutY(20.0f);
 
 
     //the label and textfield for putting a name into the score
-    Label nameLabel= new Label("Enter Name");
+    Label nameLabel= new Label("Enter Name: ");
     font = Font.font("Marker Felt", 30);
-    numberWordsLabel.setFont(font);
-    numberWordsLabel.setTextFill(Color.WHITE);
-    numberWordsLabel.setLayoutX(200.0f);
-    numberWordsLabel.setLayoutY(200.0f);
+    nameLabel.setFont(font);
+    nameLabel.setTextFill(Color.WHITE);
+    nameLabel.setLayoutX(200.0f);
+    nameLabel.setLayoutY(200.0f);
 
     TextField name = new TextField();
+    font = Font.font("Marker Felt", 20);
     name.setFont(font);
-    name.setLayoutX(300.0f);
-    name.setLayoutY(200.0f);
+    name.setLayoutX(350.0f);
+    name.setLayoutY(202.0f);
 
 
-    font = Font.font("Marker Felt", 40);
+    font = Font.font("Marker Felt", 25);
 
     //the button for playing again
     Button btReplay = new Button("Play Again?");
     btReplay.setFont(font);
-    btReplay.setLayoutX(100.0f);
-    btReplay.setLayoutY(275.0f);
+    btReplay.setLayoutX(205.0f);
+    btReplay.setLayoutY(350.0f);
 
     //the button for submitting your score
     Button btSubmit = new Button("Submit Score?");
-    btReplay.setFont(font);
-    btReplay.setLayoutX(350.0f);
-    btReplay.setLayoutY(275.0f);
+    btSubmit.setFont(font);
+    btSubmit.setLayoutX(430.0f);
+    btSubmit.setLayoutY(350.0f);
 
 
     btReplay.setOnAction((e) ->{
-      categoryScene(primaryStage, words);
+      categoryScene(primaryStage, 0);
     });
     btSubmit.setOnAction((e) ->{
 
@@ -736,7 +742,8 @@ public class HangMan extends Application{
       //iterator
       int i = 1;
       //go through file until the word has been reached
-      while (wordFinder.hasNext() && i < randomNum()) {
+      int maxNum = randomNum();
+      while (wordFinder.hasNext() && i < maxNum) {
         chosenWord = wordFinder.nextLine();
         ++i;
       }
@@ -759,7 +766,7 @@ public class HangMan extends Application{
   //returns a random number
   public static int randomNum(){
     Random rand = new Random();
-    int n = rand.nextInt(52)+1;
+    int n = rand.nextInt(51)+1;
     return n;
   }
 
@@ -855,9 +862,14 @@ public class HangMan extends Application{
 
 
   protected static void submitScore(Stage primaryStage, String words, String name){
-    words = name + " " +words;
-    SendData SendData = new SendData("127.0.0.1", 5000, "hang " + words);
+    if(name == ""){
+      words = "Unknown Player " + words;
+    }else{
+      words = name + " " +words;
+    }
 
+    SendData SendData = new SendData("127.0.0.1", 5000, "hang " + words);
+    categoryScene(primaryStage, 0);
   }
 
 }
