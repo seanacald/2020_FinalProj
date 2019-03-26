@@ -45,6 +45,7 @@ public class Game4_24 extends Application{
     private Game game;
     private Button reset,next,plus,minus,times,divide;
     private Scene resultScene;
+    private Label info;
 
     @Override
     public void start(Stage primaryStage) {
@@ -175,13 +176,18 @@ public class Game4_24 extends Application{
 
         data = new Label("Press q to start \nPress z at any time\nto stop and record score  ");
         score = new Label("Score: "+ (int)game.getScore());
+        info = new Label("Objective: reach 24 using\nthe 4 values in conjuction with +,-,*, / \n'>>>' for new board\n'cls'to reset board");
         score.setTextFill(Color.WHITE);
         data.setTextFill(Color.WHITE);
+        info.setTextFill(Color.WHITE);
         score.setFont(Font.font("Arial",FontWeight.BOLD,20));
         data.setFont(Font.font("Arial",FontWeight.BOLD,20));
+        info.setFont(Font.font("Arial",FontWeight.BOLD,14.5));
+
+        
         VBox labels = new VBox(15);
         labels.setMargin(data,new Insets(15,0,0,0));
-        labels.getChildren().addAll(data,score);
+        labels.getChildren().addAll(data,score,info);
 
         HBox finalLayout = new HBox(10);
         finalLayout.getChildren().addAll(allButtons,labels);
@@ -228,7 +234,7 @@ public class Game4_24 extends Application{
                     Label pointResult = new Label(game.getScore()+" points obtained");
                     Label pointPerQ = new Label(game.getScore()/game.getSolve() +" points avg / question solved");
                     Label x = new Label("Scores recorded");
-                    //set label text
+                    //set label text settings
                     x.setTextFill(Color.WHITE);
                     solveResult.setTextFill(Color.WHITE);
                     timeResult.setTextFill(Color.WHITE);

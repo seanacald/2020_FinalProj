@@ -25,6 +25,9 @@ import javafx.collections.*;
 import javafx.geometry.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 
 
@@ -39,15 +42,14 @@ public class TitleScreen extends Application {
     private String title = "Welcome to the Arcade!!!";
     @Override
     public void start(Stage primaryStage) {
-        //Creates a new Button for Black Jack game
-        Button btnBlackJack = new Button("Black Jack");
+        
+        
+     
         
         //New Label that will be used in the thread, will be constantly updated
         Label titleLabel = new Label("");
-        
+
         //Set location of the label
-        titleLabel.setLayoutX(300/2);
-        titleLabel.setLayoutY(20);
 
         
         
@@ -94,7 +96,9 @@ public class TitleScreen extends Application {
             primaryStage.close();
         });
 
-        btnBlackJack.setOnAction(e -> {
+        //Creates a new Button for Black Jack game
+        Button blackJack = new Button("Blackjack");
+        blackJack.setOnAction(e -> {
             //Pause the thread
             theThread.yield();
             //Hide the window for the menu
@@ -109,40 +113,54 @@ public class TitleScreen extends Application {
                 theThread.stop();
                 primaryStage.close();
             }
-            
             //If doIStay is not 0, reopen the menu
             else{
                 primaryStage.show();
             }
-            
         });
         
         //New button for game 2 (24)
-        Button btnGame2 = new Button("24");
+        Button find24 = new Button("Find 24");
         
-        btnGame2.setOnAction(new EventHandler<ActionEvent>() {
+        find24.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 //Hides the main menu window
                 primaryStage.hide();
                 //Starts 24
-                titlescreen.Game4_24.display();
+                //titlescreen.Game4_24.display();
             }
         });
         
-        Button btnGame3 = new Button("Game3");
+        Button hangman = new Button("Hangman");
+        
+        
+        titleLabel.setTextFill(Color.WHITE);
+        titleLabel.setFont(Font.font("Elephant",FontWeight.BOLD,40));
+        VBox layout = new VBox(17);  
+        layout.getChildren().addAll(titleLabel, blackJack, find24,hangman );
+        layout.setPadding(new Insets(150,0,0,165));
+        
+        blackJack.setPrefSize(475, 75);
+        blackJack.setFont(Font.font("Elephant",FontWeight.BOLD,50));
+        blackJack.setId("blackjack");
+        blackJack.setTextFill(Color.WHITE);
+        
+        find24.setPrefSize(475, 75);
+        find24.setFont(Font.font("Elephant",FontWeight.BOLD,50));
+        find24.setId("find24");
+        find24.setTextFill(Color.WHITE);
 
-        btnBlackJack.setLayoutX(20);
-        btnBlackJack.setLayoutY(30);
-        
-        
-        //Creates a new pane called root, and adds the buttons to the pane
-        Pane root = new Pane();
-        root.getChildren().addAll(btnBlackJack, btnGame2, titleLabel);
-        
+        hangman.setPrefSize(475, 75);
+        hangman.setFont(Font.font("Elephant",FontWeight.BOLD,50));
+        hangman.setId("hangman");
+        hangman.setTextFill(Color.WHITE);
+
+        layout.setId("openpane");
         //Adds the pane to the scene
-        Scene scene = new Scene(root, 300, 250);
-        
+        Scene scene = new Scene(layout, 800, 700);
+        scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+
         //Sets the title of the stage to "Games Collection"
         //Sets the scene of the stage to be the scene, and shows the stage
         primaryStage.setTitle("Games Collection!");
